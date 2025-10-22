@@ -1,5 +1,6 @@
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -30,8 +31,13 @@ export default function Home() {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
-              <Button variant="primary" size="xl" className="group">
-                Start Tournament →
+              <Button asChild variant="primary" size="xl" className="group">
+                <Link href="/tournament/create">
+                  Start Tournament
+                  <span className="inline-block ml-2 group-hover:translate-x-1 transition-transform">
+                    →
+                  </span>
+                </Link>
               </Button>
               <Button variant="secondary" size="xl">
                 Learn More
