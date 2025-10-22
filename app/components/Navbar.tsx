@@ -1,6 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
 import UserButton from "./UserButton";
+import { User } from "@supabase/supabase-js";
 
 export default async function Navbar() {
   const supabase = await createClient();
@@ -9,7 +10,7 @@ export default async function Navbar() {
   } = await supabase.auth.getUser();
 
   // Get user initials from name or email
-  const getInitials = (user: any) => {
+  const getInitials = (user: User) => {
     if (user?.user_metadata?.full_name) {
       const names = user.user_metadata.full_name.split(" ");
       return names.length >= 2
@@ -38,13 +39,22 @@ export default async function Navbar() {
 
           {/* Navigation Links */}
           <div className="hidden md:flex items-center gap-6">
-            <a href="#tournaments" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">
+            <a
+              href="#tournaments"
+              className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium"
+            >
               Tournaments
             </a>
-            <a href="#leaderboard" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">
+            <a
+              href="#leaderboard"
+              className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium"
+            >
               Leaderboard
             </a>
-            <a href="#about" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">
+            <a
+              href="#about"
+              className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium"
+            >
               About
             </a>
           </div>
@@ -64,8 +74,18 @@ export default async function Navbar() {
 
             {/* Mobile Menu Button */}
             <button className="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
               </svg>
             </button>
           </div>

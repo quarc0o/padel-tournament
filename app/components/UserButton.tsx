@@ -3,11 +3,11 @@
 import { useState, useRef, useEffect } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
+import { User } from "@supabase/supabase-js";
 
 interface UserButtonProps {
   initials: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  user: any;
+  user: User;
 }
 
 export default function UserButton({ initials, user }: UserButtonProps) {
