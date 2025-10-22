@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { User } from "@supabase/supabase-js";
+import { Button } from "./ui/button";
 
 interface UserButtonProps {
   initials: string;
@@ -58,12 +59,14 @@ export default function UserButton({ initials, user }: UserButtonProps) {
             </p>
           </div>
 
-          <button
+          <Button
             onClick={handleSignOut}
-            className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            variant="ghost"
+            size="sm"
+            className="text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 justify-start rounded-none"
           >
             Sign Out
-          </button>
+          </Button>
         </div>
       )}
     </div>

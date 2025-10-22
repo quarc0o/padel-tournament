@@ -2,6 +2,7 @@ import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
 import UserButton from "./UserButton";
 import { User } from "@supabase/supabase-js";
+import { Button } from "./ui/button";
 
 export default async function Navbar() {
   const supabase = await createClient();
@@ -64,16 +65,17 @@ export default async function Navbar() {
             {user ? (
               <UserButton initials={initials!} user={user} />
             ) : (
-              <Link
-                href="/auth/sign-in"
-                className="hidden sm:inline-flex bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-full font-semibold hover:scale-105 transition-transform shadow-lg hover:shadow-xl"
-              >
-                Log In
-              </Link>
+              <Button asChild className="hidden sm:inline-flex">
+                <Link href="/auth/sign-in">Log In</Link>
+              </Button>
             )}
 
             {/* Mobile Menu Button */}
-            <button className="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="md:hidden p-2 rounded-lg"
+            >
               <svg
                 className="w-6 h-6"
                 fill="none"
@@ -87,7 +89,7 @@ export default async function Navbar() {
                   d="M4 6h16M4 12h16M4 18h16"
                 />
               </svg>
-            </button>
+            </Button>
           </div>
         </div>
       </div>

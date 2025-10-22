@@ -14,7 +14,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Padel Tournament Tracker",
-  description: "Track your friendly padel tournaments with ease. Compete, climb the leaderboard, and have fun!",
+  description:
+    "Track your friendly padel tournaments with ease. Compete, climb the leaderboard, and have fun!",
 };
 
 export default function RootLayout({
