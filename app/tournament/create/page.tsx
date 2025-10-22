@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import StepIndicator from "@/components/ui/StepIndicator";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { createTournament } from "@/lib/tournament";
+import { createClient } from "@/utils/supabase/client";
 
 // Step 1: Tournament Type Selection
 function TournamentTypeStep({
@@ -498,37 +500,52 @@ export default function CreateTournamentPage() {
     }
   };
 
-  const handleCreateTournament = () => {
+  const handleCreateTournament = async () => {
     const filledPlayers = players.filter((p) => p.trim() !== "");
 
+    // Get current user
+    const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      console.error("❌ User not authenticated");
+      alert("Please sign in to create a tournament");
+      return;
+    }
+
     const tournamentData = {
-      tournamentType,
+      tournamentType: tournamentType as "americano" | "mexicano",
       targetPoints,
       players: filledPlayers,
-      playerCount: filledPlayers.length,
-      createdAt: new Date().toISOString(),
     };
 
     console.log("=".repeat(50));
-    console.log("🎾 TOURNAMENT CREATED");
+    console.log("🎾 CREATING TOURNAMENT");
     console.log("=".repeat(50));
     console.log("\n📋 Tournament Details:");
     console.log("  Type:", tournamentType.toUpperCase());
     console.log("  Target Points:", targetPoints);
-    console.log("  Scoring System:", `Sum to ${targetPoints}`);
-    console.log("\n👥 Players (" + filledPlayers.length + "):");
-    filledPlayers.forEach((player, index) => {
-      console.log(`  ${index + 1}. ${player}`);
-    });
-    console.log("\n⏰ Created:", new Date().toLocaleString());
-    console.log("=".repeat(50));
-    console.log("\n📊 Full Tournament Object:");
-    console.log(JSON.stringify(tournamentData, null, 2));
+    console.log("  Players:", filledPlayers.length);
     console.log("=".repeat(50));
 
-    // TODO: Save tournament to database
-    // For now, just redirect to home
-    router.push("/");
+    // Create tournament in database
+    const result = await createTournament(tournamentData, user.id);
+
+    if (result.success) {
+      console.log("\n✅ SUCCESS! Tournament created in database");
+      console.log("  Tournament ID:", result.tournament?.id);
+      console.log("  Players inserted:", result.players?.length);
+      console.log("  First match generated for Round 1");
+      console.log("=".repeat(50));
+
+      // Redirect to tournament page (we'll create this later)
+      router.push(`/tournament/${result.tournament?.id}`);
+    } else {
+      console.error("\n❌ FAILED to create tournament");
+      console.error("  Error:", result.error);
+      console.log("=".repeat(50));
+      alert(`Failed to create tournament: ${result.error}`);
+    }
   };
 
   return (
