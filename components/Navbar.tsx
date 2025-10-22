@@ -65,7 +65,7 @@ export default async function Navbar() {
             {user ? (
               <UserButton initials={initials!} user={user} />
             ) : (
-              <Button asChild className="hidden sm:inline-flex">
+              <Button asChild variant="primary" className="hidden sm:inline-flex">
                 <Link href="/auth/sign-in">Log In</Link>
               </Button>
             )}
@@ -73,8 +73,8 @@ export default async function Navbar() {
             {/* Mobile Menu Button */}
             <Button
               variant="ghost"
-              size="sm"
-              className="md:hidden p-2 rounded-lg"
+              size="icon"
+              className="md:hidden"
             >
               <svg
                 className="w-6 h-6"

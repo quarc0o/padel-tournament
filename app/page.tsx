@@ -1,4 +1,5 @@
 import Navbar from "@/components/Navbar";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
   return (
@@ -29,15 +30,12 @@ export default function Home() {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
-              <button className="group bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:scale-105 transition-all shadow-lg hover:shadow-2xl">
-                Start Tournament
-                <span className="inline-block ml-2 group-hover:translate-x-1 transition-transform">
-                  →
-                </span>
-              </button>
-              <button className="px-8 py-4 rounded-full font-bold text-lg border-2 border-gray-300 dark:border-gray-600 hover:border-purple-600 dark:hover:border-purple-400 hover:bg-white dark:hover:bg-gray-800 transition-all">
+              <Button variant="primary" size="xl" className="group">
+                Start Tournament →
+              </Button>
+              <Button variant="secondary" size="xl">
                 Learn More
-              </button>
+              </Button>
             </div>
 
             {/* Feature Cards */}
