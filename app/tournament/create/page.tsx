@@ -29,98 +29,130 @@ function TournamentTypeStep({
         {/* Americano Card */}
         <button
           onClick={() => onSelect("americano")}
-          className={`p-8 rounded-2xl border-2 transition-all text-left hover:shadow-lg ${
+          className={`group relative p-8 rounded-2xl border-2 transition-all duration-300 text-left cursor-pointer ${
             selectedType === "americano"
-              ? "border-blue-600 bg-blue-50 dark:bg-blue-900/20 shadow-lg"
-              : "border-gray-300 dark:border-gray-700 hover:border-blue-400"
+              ? "border-blue-600 bg-blue-50 dark:bg-blue-900/20 shadow-xl scale-[1.02]"
+              : "border-gray-300 dark:border-gray-700 hover:border-blue-400 hover:shadow-lg hover:scale-[1.01]"
           }`}
         >
-          <div className="space-y-4">
-            <div className="flex items-start justify-between">
-              <div className="text-4xl">🔄</div>
+          {/* Selection Indicator - Always visible */}
+          <div className="absolute top-4 right-4">
+            <div
+              className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
+                selectedType === "americano"
+                  ? "border-blue-600 bg-blue-600"
+                  : "border-gray-300 dark:border-gray-600 group-hover:border-blue-400"
+              }`}
+            >
               {selectedType === "americano" && (
-                <div className="text-blue-600">
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </div>
+                <svg
+                  className="w-4 h-4 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={3}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
               )}
             </div>
-            <div>
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                Americano
-              </h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">
-                Rotation-based tournament where you play with different partners each round
-              </p>
-              <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                <li className="flex items-start gap-2">
-                  <span className="text-green-600 mt-0.5">✓</span>
-                  <span>Social and friendly format</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-600 mt-0.5">✓</span>
-                  <span>Play with everyone</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-600 mt-0.5">✓</span>
-                  <span>Great for beginners</span>
-                </li>
-              </ul>
+          </div>
+
+          <div className="space-y-4">
+            <div className="flex items-start gap-4">
+              <div className="text-5xl">🔄</div>
+              <div className="flex-1 pt-1">
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                  Americano
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">
+                  Rotation-based tournament where you play with different partners each round
+                </p>
+              </div>
             </div>
+            <ul className="space-y-2.5 text-sm text-gray-600 dark:text-gray-400 pl-1">
+              <li className="flex items-start gap-2">
+                <span className="text-green-600 dark:text-green-400 mt-0.5 text-base">✓</span>
+                <span>Social and friendly format</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-green-600 dark:text-green-400 mt-0.5 text-base">✓</span>
+                <span>Play with everyone</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-green-600 dark:text-green-400 mt-0.5 text-base">✓</span>
+                <span>Great for beginners</span>
+              </li>
+            </ul>
           </div>
         </button>
 
         {/* Mexicano Card */}
         <button
           onClick={() => onSelect("mexicano")}
-          className={`p-8 rounded-2xl border-2 transition-all text-left hover:shadow-lg ${
+          className={`group relative p-8 rounded-2xl border-2 transition-all duration-300 text-left cursor-pointer ${
             selectedType === "mexicano"
-              ? "border-purple-600 bg-purple-50 dark:bg-purple-900/20 shadow-lg"
-              : "border-gray-300 dark:border-gray-700 hover:border-purple-400"
+              ? "border-purple-600 bg-purple-50 dark:bg-purple-900/20 shadow-xl scale-[1.02]"
+              : "border-gray-300 dark:border-gray-700 hover:border-purple-400 hover:shadow-lg hover:scale-[1.01]"
           }`}
         >
-          <div className="space-y-4">
-            <div className="flex items-start justify-between">
-              <div className="text-4xl">⚡</div>
+          {/* Selection Indicator - Always visible */}
+          <div className="absolute top-4 right-4">
+            <div
+              className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
+                selectedType === "mexicano"
+                  ? "border-purple-600 bg-purple-600"
+                  : "border-gray-300 dark:border-gray-600 group-hover:border-purple-400"
+              }`}
+            >
               {selectedType === "mexicano" && (
-                <div className="text-purple-600">
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </div>
+                <svg
+                  className="w-4 h-4 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={3}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
               )}
             </div>
-            <div>
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                Mexicano
-              </h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">
-                Dynamic tournament where matchups are based on current rankings
-              </p>
-              <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                <li className="flex items-start gap-2">
-                  <span className="text-green-600 mt-0.5">✓</span>
-                  <span>Competitive and balanced</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-600 mt-0.5">✓</span>
-                  <span>Adaptive pairings</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-600 mt-0.5">✓</span>
-                  <span>Skill-based matchups</span>
-                </li>
-              </ul>
+          </div>
+
+          <div className="space-y-4">
+            <div className="flex items-start gap-4">
+              <div className="text-5xl">⚡</div>
+              <div className="flex-1 pt-1">
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                  Mexicano
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">
+                  Dynamic tournament where matchups are based on current rankings
+                </p>
+              </div>
             </div>
+            <ul className="space-y-2.5 text-sm text-gray-600 dark:text-gray-400 pl-1">
+              <li className="flex items-start gap-2">
+                <span className="text-green-600 dark:text-green-400 mt-0.5 text-base">✓</span>
+                <span>Competitive and balanced</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-green-600 dark:text-green-400 mt-0.5 text-base">✓</span>
+                <span>Adaptive pairings</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-green-600 dark:text-green-400 mt-0.5 text-base">✓</span>
+                <span>Skill-based matchups</span>
+              </li>
+            </ul>
           </div>
         </button>
       </div>
@@ -137,11 +169,13 @@ function TargetPointsStep({
   onSelect: (points: number) => void;
 }) {
   const pointOptions = [
-    { value: 16, icon: "⚡", duration: "3-5 min", description: "Quick matches" },
-    { value: 21, icon: "⏱️", duration: "5-8 min", description: "Standard matches" },
-    { value: 24, icon: "🎯", duration: "8-10 min", description: "Moderate matches" },
-    { value: 32, icon: "🏆", duration: "12-15 min", description: "Long matches" },
+    { value: 16, duration: "3-5 min", description: "Quick matches" },
+    { value: 21, duration: "5-8 min", description: "Standard matches" },
+    { value: 24, duration: "8-10 min", description: "Moderate matches" },
+    { value: 32, duration: "12-15 min", description: "Long matches" },
   ];
+
+  const selectedOption = pointOptions.find((opt) => opt.value === selectedPoints);
 
   return (
     <div className="space-y-6">
@@ -154,74 +188,71 @@ function TargetPointsStep({
         </p>
       </div>
 
-      <div className="max-w-3xl mx-auto space-y-6">
-        {/* Example Explanation */}
-        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl p-6">
-          <div className="flex items-start gap-3">
-            <div className="text-2xl">💡</div>
-            <div className="flex-1">
-              <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
-                How it works
-              </h4>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                Each match is played until the combined score equals your target points.
-              </p>
-              <div className="bg-white dark:bg-gray-800 p-4 rounded-lg">
-                <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
-                  Example with 21 points:
-                </p>
-                <div className="space-y-1 font-mono text-sm">
-                  <p className="text-gray-900 dark:text-white">Team A: 12 - Team B: 9 = 21 ✓</p>
-                  <p className="text-gray-900 dark:text-white">Team A: 15 - Team B: 6 = 21 ✓</p>
-                </div>
-              </div>
+      <div className="max-w-xl mx-auto space-y-6">
+        {/* Dropdown Selection */}
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700">
+          <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+            Select Target Points
+          </label>
+          <div className="relative">
+            <select
+              value={selectedPoints || ""}
+              onChange={(e) => onSelect(Number(e.target.value))}
+              className="w-full px-4 py-3 pr-10 rounded-lg border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all appearance-none cursor-pointer text-lg font-semibold"
+            >
+              <option value="" disabled>
+                Choose points...
+              </option>
+              {pointOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.value} Points - {option.description} ({option.duration})
+                </option>
+              ))}
+            </select>
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+              <svg
+                className="w-5 h-5 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
             </div>
           </div>
         </div>
 
-        {/* Points Options Grid */}
-        <div className="grid sm:grid-cols-2 gap-4">
-          {pointOptions.map((option) => (
-            <button
-              key={option.value}
-              onClick={() => onSelect(option.value)}
-              className={`p-6 rounded-2xl border-2 transition-all text-left hover:shadow-lg ${
-                selectedPoints === option.value
-                  ? "border-blue-600 bg-blue-50 dark:bg-blue-900/20 shadow-lg"
-                  : "border-gray-300 dark:border-gray-700 hover:border-blue-400"
-              }`}
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div className="text-4xl">{option.icon}</div>
-                {selectedPoints === option.value && (
-                  <div className="text-blue-600">
-                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                      <path
-                        fillRule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                )}
-              </div>
-              <div>
-                <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">
-                  {option.value} Points
+        {/* Selected Option Info */}
+        {selectedOption && (
+          <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 p-6 rounded-2xl border border-blue-200 dark:border-blue-700">
+            <div className="flex items-center gap-4">
+              <div className="flex-1">
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
+                  {selectedOption.value} Points
                 </h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                  {option.description}
+                <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">
+                  {selectedOption.description}
                 </p>
                 <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
-                  <span>{option.duration} per match</span>
+                  <span>Approximately {selectedOption.duration} per match</span>
                 </div>
               </div>
-            </button>
-          ))}
-        </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -468,12 +499,34 @@ export default function CreateTournamentPage() {
   };
 
   const handleCreateTournament = () => {
-    // TODO: Save tournament to database
-    console.log({
+    const filledPlayers = players.filter((p) => p.trim() !== "");
+
+    const tournamentData = {
       tournamentType,
       targetPoints,
-      players: players.filter((p) => p.trim() !== ""),
+      players: filledPlayers,
+      playerCount: filledPlayers.length,
+      createdAt: new Date().toISOString(),
+    };
+
+    console.log("=".repeat(50));
+    console.log("🎾 TOURNAMENT CREATED");
+    console.log("=".repeat(50));
+    console.log("\n📋 Tournament Details:");
+    console.log("  Type:", tournamentType.toUpperCase());
+    console.log("  Target Points:", targetPoints);
+    console.log("  Scoring System:", `Sum to ${targetPoints}`);
+    console.log("\n👥 Players (" + filledPlayers.length + "):");
+    filledPlayers.forEach((player, index) => {
+      console.log(`  ${index + 1}. ${player}`);
     });
+    console.log("\n⏰ Created:", new Date().toLocaleString());
+    console.log("=".repeat(50));
+    console.log("\n📊 Full Tournament Object:");
+    console.log(JSON.stringify(tournamentData, null, 2));
+    console.log("=".repeat(50));
+
+    // TODO: Save tournament to database
     // For now, just redirect to home
     router.push("/");
   };
