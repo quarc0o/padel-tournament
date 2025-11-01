@@ -533,13 +533,12 @@ export default function CreateTournamentPage() {
 
     if (result.success) {
       console.log("\n✅ SUCCESS! Tournament created in database");
-      console.log("  Tournament ID:", result.tournament?.id);
-      console.log("  Players inserted:", result.players?.length);
+      console.log("  Tournament ID:", result.tournamentId);
       console.log("  First match generated for Round 1");
       console.log("=".repeat(50));
 
-      // Redirect to tournament page (we'll create this later)
-      router.push(`/tournament/${result.tournament?.id}`);
+      // Redirect to tournament page
+      router.push(`/tournament/${result.tournamentId}`);
     } else {
       console.error("\n❌ FAILED to create tournament");
       console.error("  Error:", result.error);
