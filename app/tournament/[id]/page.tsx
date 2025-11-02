@@ -25,7 +25,9 @@ export default function TournamentPage() {
   const tournamentId = params.id as string;
 
   const [tournament, setTournament] = useState<Tournament | null>(null);
-  const [currentMatch, setCurrentMatch] = useState<MatchWithPlayers | null>(null);
+  const [currentMatch, setCurrentMatch] = useState<MatchWithPlayers | null>(
+    null
+  );
   const [players, setPlayers] = useState<Player[]>([]);
   const [completedMatches, setCompletedMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState(true);
@@ -63,12 +65,13 @@ export default function TournamentPage() {
       setPlayers(playersData);
 
       // Fetch completed matches
-      const { data: completedMatchesData, error: completedMatchesError } = await supabase
-        .from("matches")
-        .select("*")
-        .eq("tournament_id", tournamentId)
-        .eq("status", "completed")
-        .order("round_number", { ascending: true });
+      const { data: completedMatchesData, error: completedMatchesError } =
+        await supabase
+          .from("matches")
+          .select("*")
+          .eq("tournament_id", tournamentId)
+          .eq("status", "completed")
+          .order("round_number", { ascending: true });
 
       if (completedMatchesError) throw completedMatchesError;
       setCompletedMatches(completedMatchesData || []);
@@ -107,10 +110,18 @@ export default function TournamentPage() {
         // Map players to match
         const matchWithPlayers: MatchWithPlayers = {
           ...matchData,
-          team_a_player1: matchPlayers.find((p) => p.id === matchData.team_a_player1_id)!,
-          team_a_player2: matchPlayers.find((p) => p.id === matchData.team_a_player2_id)!,
-          team_b_player1: matchPlayers.find((p) => p.id === matchData.team_b_player1_id)!,
-          team_b_player2: matchPlayers.find((p) => p.id === matchData.team_b_player2_id)!,
+          team_a_player1: matchPlayers.find(
+            (p) => p.id === matchData.team_a_player1_id
+          )!,
+          team_a_player2: matchPlayers.find(
+            (p) => p.id === matchData.team_a_player2_id
+          )!,
+          team_b_player1: matchPlayers.find(
+            (p) => p.id === matchData.team_b_player1_id
+          )!,
+          team_b_player2: matchPlayers.find(
+            (p) => p.id === matchData.team_b_player2_id
+          )!,
         };
 
         setCurrentMatch(matchWithPlayers);
@@ -162,12 +173,17 @@ export default function TournamentPage() {
   };
 
   const getPlayerName = (playerId: string) => {
-    const player = players.find(p => p.id === playerId);
+    const player = players.find((p) => p.id === playerId);
     return player?.player_name || "Unknown";
   };
 
   const handleSubmitScore = async () => {
-    if (!currentMatch || !tournament || teamAScore === "" || teamBScore === "") {
+    if (
+      !currentMatch ||
+      !tournament ||
+      teamAScore === "" ||
+      teamBScore === ""
+    ) {
       alert("Please enter a score");
       return;
     }
@@ -209,7 +225,9 @@ export default function TournamentPage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="text-4xl mb-4">🎾</div>
-          <p className="text-gray-600 dark:text-gray-400">Loading tournament...</p>
+          <p className="text-gray-600 dark:text-gray-400">
+            Loading tournament...
+          </p>
         </div>
       </div>
     );
@@ -237,8 +255,18 @@ export default function TournamentPage() {
             href="/"
             className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors mb-4"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
             </svg>
             Back to Home
           </Link>
@@ -262,7 +290,8 @@ export default function TournamentPage() {
                 Round {tournament.current_round}
               </h2>
               <p className="text-gray-600 dark:text-gray-400">
-                Match Status: <span className="capitalize">{currentMatch.status}</span>
+                Match Status:{" "}
+                <span className="capitalize">{currentMatch.status}</span>
               </p>
             </div>
 
@@ -361,7 +390,8 @@ export default function TournamentPage() {
                   Enter Final Score
                 </h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                  Enter one team's score - the other will auto-calculate to sum to {tournament.target_points}
+                  Enter one teams score - the other will auto-calculate to sum
+                  to {tournament.target_points}
                 </p>
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div>
@@ -397,7 +427,9 @@ export default function TournamentPage() {
                   variant="primary"
                   size="lg"
                   onClick={handleSubmitScore}
-                  disabled={teamAScore === "" || teamBScore === "" || submitting}
+                  disabled={
+                    teamAScore === "" || teamBScore === "" || submitting
+                  }
                   className="w-full"
                 >
                   {submitting ? "Saving..." : "Submit Score & Continue"}
@@ -432,10 +464,21 @@ export default function TournamentPage() {
             onClick={() => setShowMatchHistory(!showMatchHistory)}
             className="w-full"
           >
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <svg
+              className="w-5 h-5 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
-            {showMatchHistory ? "Hide" : "Show"} Match History ({completedMatches.length})
+            {showMatchHistory ? "Hide" : "Show"} Match History (
+            {completedMatches.length})
           </Button>
         </div>
 
@@ -452,12 +495,14 @@ export default function TournamentPage() {
 
               {completedMatches.length === 0 ? (
                 <p className="text-center text-gray-500 dark:text-gray-400 py-8">
-                  No completed matches yet. Finish the current match to see it here!
+                  No completed matches yet. Finish the current match to see it
+                  here!
                 </p>
               ) : (
                 <div className="space-y-4">
                   {completedMatches.map((match) => {
-                    const teamAWon = (match.team_a_score || 0) > (match.team_b_score || 0);
+                    const teamAWon =
+                      (match.team_a_score || 0) > (match.team_b_score || 0);
                     return (
                       <div
                         key={match.id}
@@ -471,10 +516,16 @@ export default function TournamentPage() {
                         <div className="p-4">
                           <div className="flex items-center justify-between">
                             {/* Team A */}
-                            <div className={`flex-1 ${teamAWon ? 'opacity-100' : 'opacity-60'}`}>
+                            <div
+                              className={`flex-1 ${
+                                teamAWon ? "opacity-100" : "opacity-60"
+                              }`}
+                            >
                               <div className="flex items-center gap-2 mb-2">
                                 <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white flex items-center justify-center font-semibold text-xs">
-                                  {getPlayerName(match.team_a_player1_id).charAt(0)}
+                                  {getPlayerName(
+                                    match.team_a_player1_id
+                                  ).charAt(0)}
                                 </div>
                                 <span className="text-sm font-medium text-gray-900 dark:text-white">
                                   {getPlayerName(match.team_a_player1_id)}
@@ -482,7 +533,9 @@ export default function TournamentPage() {
                               </div>
                               <div className="flex items-center gap-2">
                                 <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white flex items-center justify-center font-semibold text-xs">
-                                  {getPlayerName(match.team_a_player2_id).charAt(0)}
+                                  {getPlayerName(
+                                    match.team_a_player2_id
+                                  ).charAt(0)}
                                 </div>
                                 <span className="text-sm font-medium text-gray-900 dark:text-white">
                                   {getPlayerName(match.team_a_player2_id)}
@@ -492,23 +545,37 @@ export default function TournamentPage() {
 
                             {/* Score */}
                             <div className="flex items-center gap-4 px-6">
-                              <div className={`text-3xl font-bold ${teamAWon ? 'text-green-600' : 'text-gray-400'}`}>
+                              <div
+                                className={`text-3xl font-bold ${
+                                  teamAWon ? "text-green-600" : "text-gray-400"
+                                }`}
+                              >
                                 {match.team_a_score}
                               </div>
                               <span className="text-gray-400">-</span>
-                              <div className={`text-3xl font-bold ${!teamAWon ? 'text-green-600' : 'text-gray-400'}`}>
+                              <div
+                                className={`text-3xl font-bold ${
+                                  !teamAWon ? "text-green-600" : "text-gray-400"
+                                }`}
+                              >
                                 {match.team_b_score}
                               </div>
                             </div>
 
                             {/* Team B */}
-                            <div className={`flex-1 text-right ${!teamAWon ? 'opacity-100' : 'opacity-60'}`}>
+                            <div
+                              className={`flex-1 text-right ${
+                                !teamAWon ? "opacity-100" : "opacity-60"
+                              }`}
+                            >
                               <div className="flex items-center justify-end gap-2 mb-2">
                                 <span className="text-sm font-medium text-gray-900 dark:text-white">
                                   {getPlayerName(match.team_b_player1_id)}
                                 </span>
                                 <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white flex items-center justify-center font-semibold text-xs">
-                                  {getPlayerName(match.team_b_player1_id).charAt(0)}
+                                  {getPlayerName(
+                                    match.team_b_player1_id
+                                  ).charAt(0)}
                                 </div>
                               </div>
                               <div className="flex items-center justify-end gap-2">
@@ -516,7 +583,9 @@ export default function TournamentPage() {
                                   {getPlayerName(match.team_b_player2_id)}
                                 </span>
                                 <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white flex items-center justify-center font-semibold text-xs">
-                                  {getPlayerName(match.team_b_player2_id).charAt(0)}
+                                  {getPlayerName(
+                                    match.team_b_player2_id
+                                  ).charAt(0)}
                                 </div>
                               </div>
                             </div>
@@ -544,12 +613,17 @@ export default function TournamentPage() {
                   className="flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
                 >
                   <div className="flex items-center gap-4">
-                    <div className={`text-2xl font-bold ${
-                      index === 0 ? "text-yellow-500" :
-                      index === 1 ? "text-gray-400" :
-                      index === 2 ? "text-orange-600" :
-                      "text-gray-400"
-                    }`}>
+                    <div
+                      className={`text-2xl font-bold ${
+                        index === 0
+                          ? "text-yellow-500"
+                          : index === 1
+                          ? "text-gray-400"
+                          : index === 2
+                          ? "text-orange-600"
+                          : "text-gray-400"
+                      }`}
+                    >
                       {index + 1}
                     </div>
                     <div>
@@ -557,7 +631,8 @@ export default function TournamentPage() {
                         {player.player_name}
                       </p>
                       <p className="text-sm text-gray-500">
-                        {player.matches_played} matches • {player.matches_won} wins
+                        {player.matches_played} matches • {player.matches_won}{" "}
+                        wins
                       </p>
                     </div>
                   </div>
