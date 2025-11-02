@@ -98,55 +98,6 @@ export type Database = {
           }
         ];
       };
-      player_pairings: {
-        Row: {
-          id: string;
-          paired_as_opponents: number;
-          paired_as_teammates: number;
-          player1_id: string;
-          player2_id: string;
-          tournament_id: string;
-        };
-        Insert: {
-          id?: string;
-          paired_as_opponents?: number;
-          paired_as_teammates?: number;
-          player1_id: string;
-          player2_id: string;
-          tournament_id: string;
-        };
-        Update: {
-          id?: string;
-          paired_as_opponents?: number;
-          paired_as_teammates?: number;
-          player1_id?: string;
-          player2_id?: string;
-          tournament_id?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "player_pairings_player1_id_fkey";
-            columns: ["player1_id"];
-            isOneToOne: false;
-            referencedRelation: "tournament_players";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "player_pairings_player2_id_fkey";
-            columns: ["player2_id"];
-            isOneToOne: false;
-            referencedRelation: "tournament_players";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "player_pairings_tournament_id_fkey";
-            columns: ["tournament_id"];
-            isOneToOne: false;
-            referencedRelation: "tournaments";
-            referencedColumns: ["id"];
-          }
-        ];
-      };
       tournament_players: {
         Row: {
           created_at: string;
@@ -229,7 +180,31 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      complete_match_and_generate_next: {
+        Args: {
+          p_match_id: string;
+          p_team_a_score: number;
+          p_team_b_score: number;
+        };
+        Returns: Json;
+      };
+      create_tournament_with_players: {
+        Args: {
+          p_created_by: string;
+          p_name: string;
+          p_player_names: string[];
+          p_target_points: number;
+          p_tournament_type: Database["public"]["Enums"]["tournament_type"];
+        };
+        Returns: Json;
+      };
+      generate_next_match: {
+        Args: {
+          p_tournament_id: string;
+          p_tournament_type: Database["public"]["Enums"]["tournament_type"];
+        };
+        Returns: Json;
+      };
     };
     Enums: {
       match_status: "pending" | "in_progress" | "completed";

@@ -27,10 +27,12 @@ export default function TournamentPage() {
   const [tournament, setTournament] = useState<Tournament | null>(null);
   const [currentMatch, setCurrentMatch] = useState<MatchWithPlayers | null>(null);
   const [players, setPlayers] = useState<Player[]>([]);
+  const [completedMatches, setCompletedMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState(true);
   const [teamAScore, setTeamAScore] = useState<number | "">("");
   const [teamBScore, setTeamBScore] = useState<number | "">("");
   const [submitting, setSubmitting] = useState(false);
+  const [showMatchHistory, setShowMatchHistory] = useState(false);
 
   useEffect(() => {
     fetchTournamentData();
@@ -59,6 +61,17 @@ export default function TournamentPage() {
 
       if (playersError) throw playersError;
       setPlayers(playersData);
+
+      // Fetch completed matches
+      const { data: completedMatchesData, error: completedMatchesError } = await supabase
+        .from("matches")
+        .select("*")
+        .eq("tournament_id", tournamentId)
+        .eq("status", "completed")
+        .order("round_number", { ascending: true });
+
+      if (completedMatchesError) throw completedMatchesError;
+      setCompletedMatches(completedMatchesData || []);
 
       // Fetch current match (round = current_round)
       const { data: matchData, error: matchError } = await supabase
@@ -146,6 +159,11 @@ export default function TournamentPage() {
 
     setTeamBScore(score);
     setTeamAScore(tournament.target_points - score);
+  };
+
+  const getPlayerName = (playerId: string) => {
+    const player = players.find(p => p.id === playerId);
+    return player?.player_name || "Unknown";
   };
 
   const handleSubmitScore = async () => {
@@ -403,6 +421,113 @@ export default function TournamentPage() {
             <p className="text-gray-600 dark:text-gray-400">
               All rounds have been played
             </p>
+          </div>
+        )}
+
+        {/* Match History Toggle Button */}
+        <div className="max-w-3xl mx-auto mb-6">
+          <Button
+            variant="outline"
+            size="lg"
+            onClick={() => setShowMatchHistory(!showMatchHistory)}
+            className="w-full"
+          >
+            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            {showMatchHistory ? "Hide" : "Show"} Match History ({completedMatches.length})
+          </Button>
+        </div>
+
+        {/* Match History View */}
+        {showMatchHistory && (
+          <div className="max-w-3xl mx-auto mb-8">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+                Match History
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+                All completed matches in this tournament
+              </p>
+
+              {completedMatches.length === 0 ? (
+                <p className="text-center text-gray-500 dark:text-gray-400 py-8">
+                  No completed matches yet. Finish the current match to see it here!
+                </p>
+              ) : (
+                <div className="space-y-4">
+                  {completedMatches.map((match) => {
+                    const teamAWon = (match.team_a_score || 0) > (match.team_b_score || 0);
+                    return (
+                      <div
+                        key={match.id}
+                        className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden"
+                      >
+                        <div className="bg-gray-50 dark:bg-gray-700 px-4 py-2 border-b border-gray-200 dark:border-gray-600">
+                          <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                            Round {match.round_number}
+                          </span>
+                        </div>
+                        <div className="p-4">
+                          <div className="flex items-center justify-between">
+                            {/* Team A */}
+                            <div className={`flex-1 ${teamAWon ? 'opacity-100' : 'opacity-60'}`}>
+                              <div className="flex items-center gap-2 mb-2">
+                                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white flex items-center justify-center font-semibold text-xs">
+                                  {getPlayerName(match.team_a_player1_id).charAt(0)}
+                                </div>
+                                <span className="text-sm font-medium text-gray-900 dark:text-white">
+                                  {getPlayerName(match.team_a_player1_id)}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white flex items-center justify-center font-semibold text-xs">
+                                  {getPlayerName(match.team_a_player2_id).charAt(0)}
+                                </div>
+                                <span className="text-sm font-medium text-gray-900 dark:text-white">
+                                  {getPlayerName(match.team_a_player2_id)}
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* Score */}
+                            <div className="flex items-center gap-4 px-6">
+                              <div className={`text-3xl font-bold ${teamAWon ? 'text-green-600' : 'text-gray-400'}`}>
+                                {match.team_a_score}
+                              </div>
+                              <span className="text-gray-400">-</span>
+                              <div className={`text-3xl font-bold ${!teamAWon ? 'text-green-600' : 'text-gray-400'}`}>
+                                {match.team_b_score}
+                              </div>
+                            </div>
+
+                            {/* Team B */}
+                            <div className={`flex-1 text-right ${!teamAWon ? 'opacity-100' : 'opacity-60'}`}>
+                              <div className="flex items-center justify-end gap-2 mb-2">
+                                <span className="text-sm font-medium text-gray-900 dark:text-white">
+                                  {getPlayerName(match.team_b_player1_id)}
+                                </span>
+                                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white flex items-center justify-center font-semibold text-xs">
+                                  {getPlayerName(match.team_b_player1_id).charAt(0)}
+                                </div>
+                              </div>
+                              <div className="flex items-center justify-end gap-2">
+                                <span className="text-sm font-medium text-gray-900 dark:text-white">
+                                  {getPlayerName(match.team_b_player2_id)}
+                                </span>
+                                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white flex items-center justify-center font-semibold text-xs">
+                                  {getPlayerName(match.team_b_player2_id).charAt(0)}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </div>
         )}
 
