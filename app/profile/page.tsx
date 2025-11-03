@@ -15,8 +15,45 @@ export default async function ProfilePage() {
     redirect("/auth/sign-in");
   }
 
-  // TODO: Fetch user's match history from database
-  const matches = []; // Placeholder for now
+  // Fetch tournaments created by the user
+  const { data: tournaments, error: tournamentsError } = await supabase
+    .from("tournaments")
+    .select(
+      `
+      *,
+      tournament_players(count)
+    `
+    )
+    .eq("created_by", user.id)
+    .order("created_at", { ascending: false });
+
+  if (tournamentsError) {
+    console.error("Error fetching tournaments:", tournamentsError);
+  }
+
+  // Calculate total stats from tournaments
+  const totalTournaments = tournaments?.length || 0;
+  let totalMatches = 0;
+  let totalWins = 0;
+
+  // Fetch match statistics for the user
+  if (tournaments && tournaments.length > 0) {
+    for (const tournament of tournaments) {
+      const { data: players } = await supabase
+        .from("tournament_players")
+        .select("matches_played, matches_won")
+        .eq("tournament_id", tournament.id);
+
+      if (players) {
+        players.forEach((player) => {
+          totalMatches += player.matches_played || 0;
+          totalWins += player.matches_won || 0;
+        });
+      }
+    }
+  }
+
+  const winRate = totalMatches > 0 ? Math.round((totalWins / totalMatches) * 100) : 0;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gopadel-lightest via-gopadel-light/30 to-gopadel-cyan/20 dark:from-gray-900 dark:via-gopadel-dark/20 dark:to-gopadel-medium/10">
@@ -51,7 +88,15 @@ export default async function ProfilePage() {
                   <div className="flex gap-4 mt-3">
                     <div className="text-center">
                       <div className="text-2xl font-bold text-gopadel-medium">
-                        0
+                        {totalTournaments}
+                      </div>
+                      <div className="text-xs text-gray-600 dark:text-gray-400">
+                        Tournaments
+                      </div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-gopadel-medium">
+                        {totalMatches}
                       </div>
                       <div className="text-xs text-gray-600 dark:text-gray-400">
                         Matches
@@ -59,15 +104,7 @@ export default async function ProfilePage() {
                     </div>
                     <div className="text-center">
                       <div className="text-2xl font-bold text-gopadel-medium">
-                        0
-                      </div>
-                      <div className="text-xs text-gray-600 dark:text-gray-400">
-                        Wins
-                      </div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-gopadel-medium">
-                        0%
+                        {winRate}%
                       </div>
                       <div className="text-xs text-gray-600 dark:text-gray-400">
                         Win Rate
@@ -89,96 +126,120 @@ export default async function ProfilePage() {
             </div>
           </div>
 
-          {/* Match History Section */}
+          {/* Tournaments Section */}
           <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border-2 border-gopadel-light/50 p-8">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-gopadel-dark dark:text-gopadel-light">
-                Match History
+                My Tournaments
               </h2>
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="border-gopadel-medium text-gopadel-dark"
-                >
-                  All
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-gray-600 dark:text-gray-400"
-                >
-                  Wins
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-gray-600 dark:text-gray-400"
-                >
-                  Losses
-                </Button>
-              </div>
+              <Button
+                asChild
+                size="sm"
+                className="bg-gopadel-medium hover:bg-gopadel-dark text-white"
+              >
+                <Link href="/tournament/create">Create New</Link>
+              </Button>
             </div>
 
-            {/* Match List */}
-            {matches.length === 0 ? (
+            {/* Tournament List */}
+            {!tournaments || tournaments.length === 0 ? (
               <div className="text-center py-16">
                 <div className="text-6xl mb-4">🎾</div>
                 <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                  No matches yet
+                  No tournaments yet
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400 mb-6">
-                  Start playing in tournaments to see your match history here
+                  Create your first tournament to get started
                 </p>
                 <Button
                   asChild
                   className="bg-gopadel-medium hover:bg-gopadel-dark text-white"
                 >
-                  <Link href="/tournament/create">Join a Tournament</Link>
+                  <Link href="/tournament/create">Create Tournament</Link>
                 </Button>
               </div>
             ) : (
-              <div className="space-y-4">
-                {/* Match cards will go here */}
-                {matches.map((match: any, index: number) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600 hover:border-gopadel-medium transition-colors"
-                  >
-                    {/* Match details will be rendered here */}
-                  </div>
-                ))}
+              <div className="grid gap-4">
+                {tournaments.map((tournament: any) => {
+                  const playerCount = tournament.tournament_players?.[0]?.count || 0;
+                  const statusColors = {
+                    draft: "bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300",
+                    active: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
+                    completed: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
+                  };
+
+                  return (
+                    <Link
+                      key={tournament.id}
+                      href={`/tournament/${tournament.id}`}
+                      className="block p-6 bg-gray-50 dark:bg-gray-700/50 rounded-xl border-2 border-gray-200 dark:border-gray-600 hover:border-gopadel-medium dark:hover:border-gopadel-cyan transition-all hover:shadow-lg group"
+                    >
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1">
+                          <h3 className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-gopadel-medium transition-colors mb-2">
+                            {tournament.name}
+                          </h3>
+                          <div className="flex flex-wrap gap-2 text-sm text-gray-600 dark:text-gray-400">
+                            <span className="flex items-center gap-1">
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                              </svg>
+                              {playerCount} players
+                            </span>
+                            <span>•</span>
+                            <span className="capitalize">{tournament.tournament_type}</span>
+                            <span>•</span>
+                            <span>Target: {tournament.target_points} pts</span>
+                            <span>•</span>
+                            <span>Round {tournament.current_round}</span>
+                          </div>
+                        </div>
+                        <span className={`px-3 py-1 rounded-full text-xs font-semibold capitalize ${statusColors[tournament.status as keyof typeof statusColors]}`}>
+                          {tournament.status}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between pt-3 border-t border-gray-200 dark:border-gray-600">
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                          Created {new Date(tournament.created_at).toLocaleDateString()}
+                        </span>
+                        <span className="text-gopadel-medium dark:text-gopadel-cyan font-semibold text-sm group-hover:translate-x-1 transition-transform">
+                          View Details →
+                        </span>
+                      </div>
+                    </Link>
+                  );
+                })}
               </div>
             )}
           </div>
 
-          {/* Stats Section (Coming Soon) */}
+          {/* Quick Stats */}
           <div className="mt-8 grid md:grid-cols-3 gap-6">
-            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border-2 border-gopadel-light/50 p-6">
-              <h3 className="text-lg font-semibold text-gopadel-dark dark:text-gopadel-light mb-4">
-                Recent Performance
-              </h3>
-              <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                Coming soon
+            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border-2 border-gopadel-light/50 p-6 text-center">
+              <div className="text-4xl font-bold text-gopadel-medium mb-2">
+                {tournaments?.filter((t: any) => t.status === "completed").length || 0}
               </div>
+              <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                Completed Tournaments
+              </h3>
             </div>
 
-            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border-2 border-gopadel-light/50 p-6">
-              <h3 className="text-lg font-semibold text-gopadel-dark dark:text-gopadel-light mb-4">
-                Favorite Partners
-              </h3>
-              <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                Coming soon
+            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border-2 border-gopadel-light/50 p-6 text-center">
+              <div className="text-4xl font-bold text-gopadel-medium mb-2">
+                {tournaments?.filter((t: any) => t.status === "active").length || 0}
               </div>
+              <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                Active Tournaments
+              </h3>
             </div>
 
-            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border-2 border-gopadel-light/50 p-6">
-              <h3 className="text-lg font-semibold text-gopadel-dark dark:text-gopadel-light mb-4">
-                Tournaments Played
-              </h3>
-              <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                Coming soon
+            <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border-2 border-gopadel-light/50 p-6 text-center">
+              <div className="text-4xl font-bold text-gopadel-medium mb-2">
+                {tournaments?.filter((t: any) => t.status === "draft").length || 0}
               </div>
+              <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                Draft Tournaments
+              </h3>
             </div>
           </div>
         </div>

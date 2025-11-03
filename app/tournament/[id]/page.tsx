@@ -247,13 +247,13 @@ export default function TournamentPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-blue-900/20 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-gopadel-lightest via-gopadel-light/30 to-gopadel-cyan/20 dark:from-gray-900 dark:via-gopadel-dark/20 dark:to-gopadel-medium/10 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Header */}
         <div className="text-center space-y-4">
           <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors mb-4"
+            href="/profile"
+            className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gopadel-medium dark:hover:text-gopadel-cyan transition-colors mb-4"
           >
             <svg
               className="w-5 h-5"
@@ -268,13 +268,13 @@ export default function TournamentPage() {
                 d="M10 19l-7-7m0 0l7-7m-7 7h18"
               />
             </svg>
-            Back to Home
+            Back to Profile
           </Link>
-          <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+          <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-gopadel-dark via-gopadel-medium to-gopadel-cyan bg-clip-text text-transparent">
             {tournament.name}
           </h1>
-          <div className="flex items-center justify-center gap-6 text-sm text-gray-600 dark:text-gray-400">
-            <span className="capitalize">{tournament.tournament_type}</span>
+          <div className="flex items-center justify-center gap-6 text-sm text-gray-700 dark:text-gray-300">
+            <span className="capitalize font-medium">{tournament.tournament_type}</span>
             <span>•</span>
             <span>Target: {tournament.target_points} points</span>
             <span>•</span>
@@ -298,12 +298,12 @@ export default function TournamentPage() {
             {/* Match Display */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl border-2 border-gray-200 dark:border-gray-700 overflow-hidden">
               {/* Team A */}
-              <div className="p-6 bg-blue-50 dark:bg-blue-900/20">
+              <div className="p-6 bg-gopadel-light/20 dark:bg-gopadel-dark/20">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-100">
+                  <h3 className="text-lg font-semibold text-gopadel-dark dark:text-gopadel-light">
                     Team A
                   </h3>
-                  <div className="text-3xl font-bold text-blue-600">
+                  <div className="text-3xl font-bold text-gopadel-medium">
                     {teamAScore !== "" ? teamAScore : "-"}
                   </div>
                 </div>
@@ -338,17 +338,17 @@ export default function TournamentPage() {
               </div>
 
               {/* VS Divider */}
-              <div className="py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-center">
+              <div className="py-3 bg-gradient-to-r from-gopadel-medium to-gopadel-cyan text-center">
                 <span className="text-white font-bold text-xl">VS</span>
               </div>
 
               {/* Team B */}
-              <div className="p-6 bg-purple-50 dark:bg-purple-900/20">
+              <div className="p-6 bg-gopadel-cyan/20 dark:bg-gopadel-medium/20">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-purple-900 dark:text-purple-100">
+                  <h3 className="text-lg font-semibold text-gopadel-dark dark:text-gopadel-light">
                     Team B
                   </h3>
-                  <div className="text-3xl font-bold text-purple-600">
+                  <div className="text-3xl font-bold text-gopadel-cyan dark:text-gopadel-cyan">
                     {teamBScore !== "" ? teamBScore : "-"}
                   </div>
                 </div>
@@ -404,7 +404,7 @@ export default function TournamentPage() {
                       max={tournament.target_points}
                       value={teamAScore}
                       onChange={(e) => handleTeamAScoreChange(e.target.value)}
-                      className="w-full px-4 py-3 text-2xl font-bold text-center rounded-lg border-2 border-blue-300 dark:border-blue-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-4 py-3 text-2xl font-bold text-center rounded-lg border-2 border-gopadel-light dark:border-gopadel-medium bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-gopadel-medium focus:border-gopadel-medium"
                       placeholder="0"
                     />
                   </div>
@@ -418,7 +418,7 @@ export default function TournamentPage() {
                       max={tournament.target_points}
                       value={teamBScore}
                       onChange={(e) => handleTeamBScoreChange(e.target.value)}
-                      className="w-full px-4 py-3 text-2xl font-bold text-center rounded-lg border-2 border-purple-300 dark:border-purple-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                      className="w-full px-4 py-3 text-2xl font-bold text-center rounded-lg border-2 border-gopadel-cyan dark:border-gopadel-cyan bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-gopadel-cyan focus:border-gopadel-cyan"
                       placeholder="0"
                     />
                   </div>
@@ -637,7 +637,7 @@ export default function TournamentPage() {
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-2xl font-bold text-blue-600">
+                    <p className="text-2xl font-bold text-gopadel-medium">
                       {player.total_points}
                     </p>
                     <p className="text-xs text-gray-500">points</p>
