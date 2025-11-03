@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-blue-900/20">
+    <div className="min-h-screen  from-blue-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-blue-900/20">
       <Navbar />
 
       {/* Hero Section */}
@@ -31,17 +31,10 @@ export default function Home() {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
-              <Button asChild variant="primary" size="xl" className="group">
-                <Link href="/tournament/create">
-                  Start Tournament
-                  <span className="inline-block ml-2 group-hover:translate-x-1 transition-transform">
-                    →
-                  </span>
-                </Link>
+              <Button>
+                <Link href="/tournament/create">Start Tournament</Link>
               </Button>
-              <Button variant="secondary" size="xl">
-                Learn More
-              </Button>
+              <Button variant="secondary">Learn More</Button>
             </div>
 
             {/* Feature Cards */}

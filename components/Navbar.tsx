@@ -36,13 +36,10 @@ export default async function Navbar() {
             <Image
               src="/gopadel_logo.png"
               alt="GoPadel Logo"
-              width={200}
+              width={150}
               height={40}
               className="object-contain"
             />
-            <span className="font-bold text-xl bg-gradient-to-r from-gopadel-dark to-gopadel-medium bg-clip-text text-transparent">
-              GoPadel
-            </span>
           </Link>
 
           {/* Auth Button */}
@@ -50,11 +47,7 @@ export default async function Navbar() {
             {user ? (
               <UserButton initials={initials!} user={user} />
             ) : (
-              <Button
-                asChild
-                variant="primary"
-                className="hidden sm:inline-flex"
-              >
+              <Button asChild className="hidden sm:inline-flex">
                 <Link href="/auth/sign-in">Log In</Link>
               </Button>
             )}
