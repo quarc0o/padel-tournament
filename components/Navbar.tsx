@@ -45,28 +45,6 @@ export default async function Navbar() {
             </span>
           </Link>
 
-          {/* Navigation Links */}
-          <div className="hidden md:flex items-center gap-6">
-            <a
-              href="#tournaments"
-              className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium"
-            >
-              Tournaments
-            </a>
-            <a
-              href="#leaderboard"
-              className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium"
-            >
-              Leaderboard
-            </a>
-            <a
-              href="#about"
-              className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium"
-            >
-              About
-            </a>
-          </div>
-
           {/* Auth Button */}
           <div className="flex items-center gap-4">
             {user ? (
