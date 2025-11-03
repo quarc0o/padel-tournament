@@ -72,21 +72,28 @@ function TournamentTypeStep({
                   Americano
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400 text-sm">
-                  Rotation-based tournament where you play with different partners each round
+                  Rotation-based tournament where you play with different
+                  partners each round
                 </p>
               </div>
             </div>
             <ul className="space-y-2.5 text-sm text-gray-600 dark:text-gray-400 pl-1">
               <li className="flex items-start gap-2">
-                <span className="text-green-600 dark:text-green-400 mt-0.5 text-base">✓</span>
+                <span className="text-green-600 dark:text-green-400 mt-0.5 text-base">
+                  ✓
+                </span>
                 <span>Social and friendly format</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-green-600 dark:text-green-400 mt-0.5 text-base">✓</span>
+                <span className="text-green-600 dark:text-green-400 mt-0.5 text-base">
+                  ✓
+                </span>
                 <span>Play with everyone</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-green-600 dark:text-green-400 mt-0.5 text-base">✓</span>
+                <span className="text-green-600 dark:text-green-400 mt-0.5 text-base">
+                  ✓
+                </span>
                 <span>Great for beginners</span>
               </li>
             </ul>
@@ -137,21 +144,28 @@ function TournamentTypeStep({
                   Mexicano
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400 text-sm">
-                  Dynamic tournament where matchups are based on current rankings
+                  Dynamic tournament where matchups are based on current
+                  rankings
                 </p>
               </div>
             </div>
             <ul className="space-y-2.5 text-sm text-gray-600 dark:text-gray-400 pl-1">
               <li className="flex items-start gap-2">
-                <span className="text-green-600 dark:text-green-400 mt-0.5 text-base">✓</span>
+                <span className="text-green-600 dark:text-green-400 mt-0.5 text-base">
+                  ✓
+                </span>
                 <span>Competitive and balanced</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-green-600 dark:text-green-400 mt-0.5 text-base">✓</span>
+                <span className="text-green-600 dark:text-green-400 mt-0.5 text-base">
+                  ✓
+                </span>
                 <span>Adaptive pairings</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-green-600 dark:text-green-400 mt-0.5 text-base">✓</span>
+                <span className="text-green-600 dark:text-green-400 mt-0.5 text-base">
+                  ✓
+                </span>
                 <span>Skill-based matchups</span>
               </li>
             </ul>
@@ -177,7 +191,9 @@ function TargetPointsStep({
     { value: 32, duration: "12-15 min", description: "Long matches" },
   ];
 
-  const selectedOption = pointOptions.find((opt) => opt.value === selectedPoints);
+  const selectedOption = pointOptions.find(
+    (opt) => opt.value === selectedPoints
+  );
 
   return (
     <div className="space-y-6">
@@ -207,7 +223,8 @@ function TargetPointsStep({
               </option>
               {pointOptions.map((option) => (
                 <option key={option.value} value={option.value}>
-                  {option.value} Points - {option.description} ({option.duration})
+                  {option.value} Points - {option.description} (
+                  {option.duration})
                 </option>
               ))}
             </select>
@@ -241,7 +258,12 @@ function TargetPointsStep({
                   {selectedOption.description}
                 </p>
                 <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -278,9 +300,11 @@ function PlayersStep({
     }
 
     // Remove empty slots from the end (but keep at least one empty slot)
-    while (newPlayers.length > 1 &&
-           newPlayers[newPlayers.length - 1] === "" &&
-           newPlayers[newPlayers.length - 2] === "") {
+    while (
+      newPlayers.length > 1 &&
+      newPlayers[newPlayers.length - 1] === "" &&
+      newPlayers[newPlayers.length - 2] === ""
+    ) {
       newPlayers.pop();
     }
 
@@ -312,11 +336,22 @@ function PlayersStep({
       {/* Player Count Display */}
       <div className="max-w-md mx-auto bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 p-4 rounded-xl border border-blue-200 dark:border-blue-700">
         <div className="flex items-center justify-center gap-3">
-          <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+          <svg
+            className="w-6 h-6 text-blue-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+            />
           </svg>
           <p className="font-semibold text-gray-900 dark:text-white">
-            {filledPlayers.length} {filledPlayers.length === 1 ? "player" : "players"} added
+            {filledPlayers.length}{" "}
+            {filledPlayers.length === 1 ? "player" : "players"} added
           </p>
         </div>
         {filledPlayers.length >= 4 && filledPlayers.length % 4 === 0 && (
@@ -330,10 +365,7 @@ function PlayersStep({
       <div className="max-w-2xl mx-auto">
         <div className="space-y-3">
           {players.map((player, index) => (
-            <div
-              key={index}
-              className="flex items-center gap-3 group"
-            >
+            <div key={index} className="flex items-center gap-3 group">
               <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white flex items-center justify-center font-semibold">
                 {index + 1}
               </div>
@@ -341,7 +373,9 @@ function PlayersStep({
                 type="text"
                 value={player}
                 onChange={(e) => updatePlayer(index, e.target.value)}
-                placeholder={index === 0 ? "Enter first player name" : "Enter player name"}
+                placeholder={
+                  index === 0 ? "Enter first player name" : "Enter player name"
+                }
                 className="flex-1 px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                 autoFocus={index === 0}
               />
@@ -351,14 +385,26 @@ function PlayersStep({
                   className="flex-shrink-0 w-10 h-10 rounded-lg bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-900/40 transition-colors opacity-0 group-hover:opacity-100"
                   title="Remove player"
                 >
-                  <svg className="w-5 h-5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <svg
+                    className="w-5 h-5 mx-auto"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
               )}
-              {player.trim() === "" && players.length > 1 && index !== players.length - 1 && (
-                <div className="w-10" /> // Spacer for alignment
-              )}
+              {player.trim() === "" &&
+                players.length > 1 &&
+                index !== players.length - 1 && (
+                  <div className="w-10" /> // Spacer for alignment
+                )}
             </div>
           ))}
         </div>
@@ -367,8 +413,16 @@ function PlayersStep({
         {filledPlayers.length < 4 && (
           <div className="mt-6 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-lg p-4">
             <div className="flex items-start gap-3">
-              <svg className="w-5 h-5 text-yellow-600 dark:text-yellow-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              <svg
+                className="w-5 h-5 text-yellow-600 dark:text-yellow-400 mt-0.5"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                  clipRule="evenodd"
+                />
               </svg>
               <p className="text-sm text-yellow-800 dark:text-yellow-200">
                 You need at least 4 players to start a tournament. Keep adding!
@@ -418,7 +472,9 @@ function SummaryStep({
               </span>
             </div>
             <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700">
-              <span className="text-gray-600 dark:text-gray-400">Target Points:</span>
+              <span className="text-gray-600 dark:text-gray-400">
+                Target Points:
+              </span>
               <span className="font-semibold text-gray-900 dark:text-white">
                 Sum to {targetPoints}
               </span>
@@ -505,7 +561,9 @@ export default function CreateTournamentPage() {
 
     // Get current user
     const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (!user) {
       console.error("❌ User not authenticated");
@@ -556,8 +614,18 @@ export default function CreateTournamentPage() {
             href="/"
             className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors mb-6"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
             </svg>
             Back to Home
           </Link>
@@ -611,7 +679,6 @@ export default function CreateTournamentPage() {
 
           {currentStep < steps.length ? (
             <Button
-              variant="primary"
               size="lg"
               onClick={handleNext}
               disabled={!canProceed()}
@@ -621,7 +688,6 @@ export default function CreateTournamentPage() {
             </Button>
           ) : (
             <Button
-              variant="primary"
               size="lg"
               onClick={handleCreateTournament}
               disabled={!canProceed()}

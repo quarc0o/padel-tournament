@@ -274,7 +274,9 @@ export default function TournamentPage() {
             {tournament.name}
           </h1>
           <div className="flex items-center justify-center gap-6 text-sm text-gray-700 dark:text-gray-300">
-            <span className="capitalize font-medium">{tournament.tournament_type}</span>
+            <span className="capitalize font-medium">
+              {tournament.tournament_type}
+            </span>
             <span>•</span>
             <span>Target: {tournament.target_points} points</span>
             <span>•</span>
@@ -424,7 +426,6 @@ export default function TournamentPage() {
                   </div>
                 </div>
                 <Button
-                  variant="primary"
                   size="lg"
                   onClick={handleSubmitScore}
                   disabled={

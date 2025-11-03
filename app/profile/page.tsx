@@ -3,6 +3,14 @@ import { redirect } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Database } from "@/types/database";
+
+type Tournament = Database["public"]["Tables"]["tournaments"]["Row"];
+type TournamentStatus = Database["public"]["Enums"]["tournament_status"];
+
+interface TournamentWithCount extends Tournament {
+  tournament_players: { count: number }[];
+}
 
 export default async function ProfilePage() {
   const supabase = await createClient();
@@ -160,9 +168,9 @@ export default async function ProfilePage() {
               </div>
             ) : (
               <div className="grid gap-4">
-                {tournaments.map((tournament: any) => {
+                {tournaments.map((tournament: TournamentWithCount) => {
                   const playerCount = tournament.tournament_players?.[0]?.count || 0;
-                  const statusColors = {
+                  const statusColors: Record<TournamentStatus, string> = {
                     draft: "bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300",
                     active: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
                     completed: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
@@ -194,7 +202,7 @@ export default async function ProfilePage() {
                             <span>Round {tournament.current_round}</span>
                           </div>
                         </div>
-                        <span className={`px-3 py-1 rounded-full text-xs font-semibold capitalize ${statusColors[tournament.status as keyof typeof statusColors]}`}>
+                        <span className={`px-3 py-1 rounded-full text-xs font-semibold capitalize ${statusColors[tournament.status]}`}>
                           {tournament.status}
                         </span>
                       </div>
@@ -217,7 +225,7 @@ export default async function ProfilePage() {
           <div className="mt-8 grid md:grid-cols-3 gap-6">
             <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border-2 border-gopadel-light/50 p-6 text-center">
               <div className="text-4xl font-bold text-gopadel-medium mb-2">
-                {tournaments?.filter((t: any) => t.status === "completed").length || 0}
+                {tournaments?.filter((t: TournamentWithCount) => t.status === "completed").length || 0}
               </div>
               <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                 Completed Tournaments
@@ -226,7 +234,7 @@ export default async function ProfilePage() {
 
             <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border-2 border-gopadel-light/50 p-6 text-center">
               <div className="text-4xl font-bold text-gopadel-medium mb-2">
-                {tournaments?.filter((t: any) => t.status === "active").length || 0}
+                {tournaments?.filter((t: TournamentWithCount) => t.status === "active").length || 0}
               </div>
               <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                 Active Tournaments
@@ -235,7 +243,7 @@ export default async function ProfilePage() {
 
             <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border-2 border-gopadel-light/50 p-6 text-center">
               <div className="text-4xl font-bold text-gopadel-medium mb-2">
-                {tournaments?.filter((t: any) => t.status === "draft").length || 0}
+                {tournaments?.filter((t: TournamentWithCount) => t.status === "draft").length || 0}
               </div>
               <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                 Draft Tournaments
