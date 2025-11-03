@@ -1,5 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
+import Image from "next/image";
 import UserButton from "./UserButton";
 import { User } from "@supabase/supabase-js";
 import { Button } from "./ui/button";
@@ -32,9 +33,15 @@ export default async function Navbar() {
         <div className="flex justify-between items-center h-16">
           {/* Logo/Brand */}
           <Link href="/" className="flex items-center gap-2">
-            <span className="text-2xl">🎾</span>
-            <span className="font-bold text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Padel Tracker
+            <Image
+              src="/gopadel_logo.png"
+              alt="GoPadel Logo"
+              width={200}
+              height={40}
+              className="object-contain"
+            />
+            <span className="font-bold text-xl bg-gradient-to-r from-gopadel-dark to-gopadel-medium bg-clip-text text-transparent">
+              GoPadel
             </span>
           </Link>
 
@@ -65,17 +72,17 @@ export default async function Navbar() {
             {user ? (
               <UserButton initials={initials!} user={user} />
             ) : (
-              <Button asChild variant="primary" className="hidden sm:inline-flex">
+              <Button
+                asChild
+                variant="primary"
+                className="hidden sm:inline-flex"
+              >
                 <Link href="/auth/sign-in">Log In</Link>
               </Button>
             )}
 
             {/* Mobile Menu Button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden"
-            >
+            <Button variant="ghost" size="icon" className="md:hidden">
               <svg
                 className="w-6 h-6"
                 fill="none"

@@ -36,6 +36,11 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-gopadel-dark: #03045e;
+  --color-gopadel-medium: #0077b6;
+  --color-gopadel-cyan: #00b4d8;
+  --color-gopadel-light: #90e0ef;
+  --color-gopadel-lightest: #caf0f8;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);

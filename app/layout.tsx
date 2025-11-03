@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Padel Tournament Tracker",
+  title: "GoPadel - Padel Tournament Tracker",
   description:
     "Track your friendly padel tournaments with ease. Compete, climb the leaderboard, and have fun!",
 };
