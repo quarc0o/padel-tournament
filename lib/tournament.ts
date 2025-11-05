@@ -16,6 +16,18 @@ export interface TournamentData {
 }
 
 /**
+ * Shuffles an array using Fisher-Yates algorithm
+ */
+function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+/**
  * Creates a tournament with initial match (Round 1) using RPC function
  */
 export async function createTournament(data: TournamentData, userId: string) {
@@ -24,11 +36,14 @@ export async function createTournament(data: TournamentData, userId: string) {
   try {
     const tournamentName = `${data.tournamentType.charAt(0).toUpperCase() + data.tournamentType.slice(1)} - ${new Date().toLocaleDateString()}`;
 
+    // Randomize player order for fair pairings
+    const shuffledPlayers = shuffleArray(data.players);
+
     // Prepare player data with names, emails, user_ids, and avatar_urls
-    const playerNames = data.players.map(p => p.name);
-    const playerEmails = data.players.map(p => p.email || null);
-    const playerUserIds = data.players.map(p => p.userId || null);
-    const playerAvatarUrls = data.players.map(p => p.avatarUrl || null);
+    const playerNames = shuffledPlayers.map(p => p.name);
+    const playerEmails = shuffledPlayers.map(p => p.email || null);
+    const playerUserIds = shuffledPlayers.map(p => p.userId || null);
+    const playerAvatarUrls = shuffledPlayers.map(p => p.avatarUrl || null);
 
     // Call RPC function to create tournament, add players, and generate first match
     const { data: result, error } = await supabase.rpc(
