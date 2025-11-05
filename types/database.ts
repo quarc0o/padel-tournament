@@ -20,6 +20,7 @@ export type Database = {
           created_at: string;
           id: string;
           round_number: number;
+          sideline_player_id: string | null;
           started_at: string | null;
           status: Database["public"]["Enums"]["match_status"];
           team_a_player1_id: string;
@@ -35,6 +36,7 @@ export type Database = {
           created_at?: string;
           id?: string;
           round_number: number;
+          sideline_player_id?: string | null;
           started_at?: string | null;
           status?: Database["public"]["Enums"]["match_status"];
           team_a_player1_id: string;
@@ -50,6 +52,7 @@ export type Database = {
           created_at?: string;
           id?: string;
           round_number?: number;
+          sideline_player_id?: string | null;
           started_at?: string | null;
           status?: Database["public"]["Enums"]["match_status"];
           team_a_player1_id?: string;
@@ -61,6 +64,13 @@ export type Database = {
           tournament_id?: string;
         };
         Relationships: [
+          {
+            foreignKeyName: "matches_sideline_player_id_fkey";
+            columns: ["sideline_player_id"];
+            isOneToOne: false;
+            referencedRelation: "tournament_players";
+            referencedColumns: ["id"];
+          },
           {
             foreignKeyName: "matches_team_a_player1_id_fkey";
             columns: ["team_a_player1_id"];
@@ -201,10 +211,21 @@ export type Database = {
         Args: {
           p_created_by: string;
           p_name: string;
+          p_player_avatar_urls?: string[];
+          p_player_emails?: string[];
           p_player_names: string[];
+          p_player_user_ids?: string[];
           p_target_points: number;
           p_tournament_type: Database["public"]["Enums"]["tournament_type"];
         };
+        Returns: Json;
+      };
+      generate_americano_match: {
+        Args: { p_tournament_id: string };
+        Returns: Json;
+      };
+      generate_mexicano_match: {
+        Args: { p_tournament_id: string };
         Returns: Json;
       };
       generate_next_match: {
