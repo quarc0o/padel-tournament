@@ -276,13 +276,13 @@ export default function TournamentPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gopadel-lightest via-gopadel-light/30 to-gopadel-cyan/20 dark:from-gray-900 dark:via-gopadel-dark/20 dark:to-gopadel-medium/10 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto space-y-8">
+    <div className="min-h-screen bg-white dark:bg-gray-900 py-8 px-4 sm:px-6">
+      <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
-        <div className="text-center space-y-4">
+        <div className="text-center space-y-3">
           <Link
             href="/profile"
-            className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gopadel-medium dark:hover:text-gopadel-cyan transition-colors mb-4"
+            className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gopadel-medium dark:hover:text-gopadel-cyan transition-colors mb-2"
           >
             <svg
               className="w-5 h-5"
@@ -299,190 +299,212 @@ export default function TournamentPage() {
             </svg>
             Back to Profile
           </Link>
-          <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-gopadel-dark via-gopadel-medium to-gopadel-cyan bg-clip-text text-transparent">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">
             {tournament.name}
           </h1>
-          <div className="flex items-center justify-center gap-6 text-sm text-gray-700 dark:text-gray-300">
+          <div className="flex items-center justify-center gap-4 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
             <span className="capitalize font-medium">
               {tournament.tournament_type}
             </span>
             <span>•</span>
-            <span>Target: {tournament.target_points} points</span>
+            <span>Target: {tournament.target_points} pts</span>
             <span>•</span>
-            <span>Round {tournament.current_round}</span>
+            <span className="font-semibold">Round {tournament.current_round}</span>
           </div>
         </div>
 
         {/* Current Match */}
         {currentMatch ? (
-          <div className="max-w-3xl mx-auto space-y-6">
-            <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                Round {tournament.current_round}
-              </h2>
-              <p className="text-gray-600 dark:text-gray-400">
-                Match Status:{" "}
-                <span className="capitalize">{currentMatch.status}</span>
-              </p>
-            </div>
-
-            {/* Match Display */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl border-2 border-gray-200 dark:border-gray-700 overflow-hidden">
-              {/* Team A */}
-              <div className="p-6 bg-gopadel-light/20 dark:bg-gopadel-dark/20">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-gopadel-dark dark:text-gopadel-light">
-                    Team A
-                  </h3>
-                  <div className="text-3xl font-bold text-gopadel-medium">
-                    {teamAScore !== "" ? teamAScore : "-"}
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 rounded-lg">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white flex items-center justify-center font-semibold">
-                      {currentMatch.team_a_player1.player_name.charAt(0)}
-                    </div>
-                    <div>
-                      <p className="font-medium text-gray-900 dark:text-white">
-                        {currentMatch.team_a_player1.player_name}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        {currentMatch.team_a_player1.total_points} pts
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 rounded-lg">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white flex items-center justify-center font-semibold">
-                      {currentMatch.team_a_player2.player_name.charAt(0)}
-                    </div>
-                    <div>
-                      <p className="font-medium text-gray-900 dark:text-white">
-                        {currentMatch.team_a_player2.player_name}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        {currentMatch.team_a_player2.total_points} pts
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* VS Divider */}
-              <div className="py-3 bg-gradient-to-r from-gopadel-medium to-gopadel-cyan text-center">
-                <span className="text-white font-bold text-xl">VS</span>
-              </div>
-
-              {/* Team B */}
-              <div className="p-6 bg-gopadel-cyan/20 dark:bg-gopadel-medium/20">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-gopadel-dark dark:text-gopadel-light">
-                    Team B
-                  </h3>
-                  <div className="text-3xl font-bold text-gopadel-cyan dark:text-gopadel-cyan">
-                    {teamBScore !== "" ? teamBScore : "-"}
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 rounded-lg">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white flex items-center justify-center font-semibold">
-                      {currentMatch.team_b_player1.player_name.charAt(0)}
-                    </div>
-                    <div>
-                      <p className="font-medium text-gray-900 dark:text-white">
-                        {currentMatch.team_b_player1.player_name}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        {currentMatch.team_b_player1.total_points} pts
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 rounded-lg">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white flex items-center justify-center font-semibold">
-                      {currentMatch.team_b_player2.player_name.charAt(0)}
-                    </div>
-                    <div>
-                      <p className="font-medium text-gray-900 dark:text-white">
-                        {currentMatch.team_b_player2.player_name}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        {currentMatch.team_b_player2.total_points} pts
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Score Input */}
-            {currentMatch.status === "pending" && (
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                  Enter Final Score
-                </h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                  Enter one teams score - the other will auto-calculate to sum
-                  to {tournament.target_points}
+          <div className="space-y-4">
+            {/* Match Display - Padel Court Layout */}
+            <div className="bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 sm:p-6">
+              {/* Match Status */}
+              <div className="text-center mb-4">
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Match Status:{" "}
+                  <span className="capitalize font-medium">{currentMatch.status}</span>
                 </p>
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Team A Score
-                    </label>
-                    <input
-                      type="number"
-                      min="0"
-                      max={tournament.target_points}
-                      value={teamAScore}
-                      onChange={(e) => handleTeamAScoreChange(e.target.value)}
-                      className="w-full px-4 py-3 text-2xl font-bold text-center rounded-lg border-2 border-gopadel-light dark:border-gopadel-medium bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-gopadel-medium focus:border-gopadel-medium"
-                      placeholder="0"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Team B Score
-                    </label>
-                    <input
-                      type="number"
-                      min="0"
-                      max={tournament.target_points}
-                      value={teamBScore}
-                      onChange={(e) => handleTeamBScoreChange(e.target.value)}
-                      className="w-full px-4 py-3 text-2xl font-bold text-center rounded-lg border-2 border-gopadel-cyan dark:border-gopadel-cyan bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-gopadel-cyan focus:border-gopadel-cyan"
-                      placeholder="0"
-                    />
-                  </div>
-                </div>
-                <Button
-                  size="lg"
-                  onClick={handleSubmitScore}
-                  disabled={
-                    teamAScore === "" || teamBScore === "" || submitting
-                  }
-                  className="w-full"
-                >
-                  {submitting ? "Saving..." : "Submit Score & Continue"}
-                </Button>
               </div>
+
+              {/* Court Layout: 2 vs 2 */}
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                {/* Left Side - Team A */}
+                <div className="space-y-3">
+                  <div className="text-center mb-3">
+                    <h3 className="text-sm font-semibold text-gopadel-medium mb-1">
+                      Team A
+                    </h3>
+                  </div>
+
+                  {/* Player 1 */}
+                  <div className="bg-white dark:bg-gray-700 rounded-lg p-3 border-2 border-gopadel-light dark:border-gopadel-medium">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold text-sm">
+                        {currentMatch.team_a_player1.player_name.charAt(0)}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-gray-900 dark:text-white text-sm truncate">
+                          {currentMatch.team_a_player1.player_name}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {currentMatch.team_a_player1.total_points} pts
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Player 2 */}
+                  <div className="bg-white dark:bg-gray-700 rounded-lg p-3 border-2 border-gopadel-light dark:border-gopadel-medium">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold text-sm">
+                        {currentMatch.team_a_player2.player_name.charAt(0)}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-gray-900 dark:text-white text-sm truncate">
+                          {currentMatch.team_a_player2.player_name}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {currentMatch.team_a_player2.total_points} pts
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Score Input for Team A */}
+                  {currentMatch.status === "pending" && (
+                    <div className="pt-2">
+                      <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1.5 text-center">
+                        Score
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        max={tournament.target_points}
+                        value={teamAScore}
+                        onChange={(e) => handleTeamAScoreChange(e.target.value)}
+                        className="w-full px-3 py-2 text-3xl font-bold text-center rounded-lg border-2 border-gopadel-light dark:border-gopadel-medium bg-white dark:bg-gray-800 text-gopadel-medium dark:text-gopadel-light focus:ring-2 focus:ring-gopadel-medium focus:border-gopadel-medium outline-none"
+                        placeholder="0"
+                      />
+                    </div>
+                  )}
+                  {currentMatch.status === "completed" && (
+                    <div className="pt-2 text-center">
+                      <div className="text-4xl font-bold text-gopadel-medium">
+                        {teamAScore !== "" ? teamAScore : "-"}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Right Side - Team B */}
+                <div className="space-y-3">
+                  <div className="text-center mb-3">
+                    <h3 className="text-sm font-semibold text-gopadel-cyan mb-1">
+                      Team B
+                    </h3>
+                  </div>
+
+                  {/* Player 1 */}
+                  <div className="bg-white dark:bg-gray-700 rounded-lg p-3 border-2 border-gopadel-cyan dark:border-gopadel-cyan">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-purple-600 text-white flex items-center justify-center font-semibold text-sm">
+                        {currentMatch.team_b_player1.player_name.charAt(0)}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-gray-900 dark:text-white text-sm truncate">
+                          {currentMatch.team_b_player1.player_name}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {currentMatch.team_b_player1.total_points} pts
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Player 2 */}
+                  <div className="bg-white dark:bg-gray-700 rounded-lg p-3 border-2 border-gopadel-cyan dark:border-gopadel-cyan">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-purple-600 text-white flex items-center justify-center font-semibold text-sm">
+                        {currentMatch.team_b_player2.player_name.charAt(0)}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-gray-900 dark:text-white text-sm truncate">
+                          {currentMatch.team_b_player2.player_name}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {currentMatch.team_b_player2.total_points} pts
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Score Input for Team B */}
+                  {currentMatch.status === "pending" && (
+                    <div className="pt-2">
+                      <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1.5 text-center">
+                        Score
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        max={tournament.target_points}
+                        value={teamBScore}
+                        onChange={(e) => handleTeamBScoreChange(e.target.value)}
+                        className="w-full px-3 py-2 text-3xl font-bold text-center rounded-lg border-2 border-gopadel-cyan dark:border-gopadel-cyan bg-white dark:bg-gray-800 text-gopadel-cyan dark:text-gopadel-cyan focus:ring-2 focus:ring-gopadel-cyan focus:border-gopadel-cyan outline-none"
+                        placeholder="0"
+                      />
+                    </div>
+                  )}
+                  {currentMatch.status === "completed" && (
+                    <div className="pt-2 text-center">
+                      <div className="text-4xl font-bold text-gopadel-cyan">
+                        {teamBScore !== "" ? teamBScore : "-"}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Helper Text */}
+              {currentMatch.status === "pending" && (
+                <div className="mt-4 text-center">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    Enter one score - the other auto-calculates to {tournament.target_points}
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Submit Button */}
+            {currentMatch.status === "pending" && (
+              <Button
+                size="lg"
+                onClick={handleSubmitScore}
+                disabled={
+                  teamAScore === "" || teamBScore === "" || submitting
+                }
+                className="w-full"
+              >
+                {submitting ? "Saving..." : "Submit Score & Continue"}
+              </Button>
             )}
 
             {currentMatch.status === "completed" && (
-              <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg p-6 text-center">
-                <p className="text-green-800 dark:text-green-200 font-semibold">
+              <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg p-4 text-center">
+                <p className="text-green-800 dark:text-green-200 font-semibold text-sm">
                   ✓ Match completed! Generating next round...
                 </p>
               </div>
             )}
           </div>
         ) : viewMatches ? (
-          <div className="text-center py-12">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl border-2 border-gopadel-light dark:border-gopadel-medium p-12 shadow-lg max-w-2xl mx-auto">
-              <div className="text-6xl mb-4">🏆</div>
-              <p className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+          <div className="text-center py-8">
+            <div className="bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-8 max-w-2xl mx-auto">
+              <div className="text-5xl mb-4">🏆</div>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
                 Tournament Complete
               </p>
-              <p className="text-gray-600 dark:text-gray-400 mb-8">
+              <p className="text-gray-600 dark:text-gray-400 mb-6 text-sm">
                 All rounds have been played. View the final results below or check match history.
               </p>
               <Button
@@ -498,7 +520,7 @@ export default function TournamentPage() {
         ) : null}
 
         {/* Match History Toggle Button */}
-        <div className="max-w-3xl mx-auto mb-6">
+        <div className="mb-4">
           <Button
             variant="outline"
             size="lg"
@@ -525,77 +547,77 @@ export default function TournamentPage() {
 
         {/* Match History View */}
         {showMatchHistory && (
-          <div className="max-w-3xl mx-auto mb-8">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6">
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+          <div className="mb-6">
+            <div className="bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 sm:p-6">
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
                 Match History
               </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+              <p className="text-xs text-gray-600 dark:text-gray-400 mb-4">
                 All completed matches in this tournament
               </p>
 
               {completedMatches.length === 0 ? (
-                <p className="text-center text-gray-500 dark:text-gray-400 py-8">
+                <p className="text-center text-gray-500 dark:text-gray-400 py-6 text-sm">
                   No completed matches yet. Finish the current match to see it
                   here!
                 </p>
               ) : (
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {completedMatches.map((match) => {
                     const teamAWon =
                       (match.team_a_score || 0) > (match.team_b_score || 0);
                     return (
                       <div
                         key={match.id}
-                        className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden"
+                        className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden"
                       >
-                        <div className="bg-gray-50 dark:bg-gray-700 px-4 py-2 border-b border-gray-200 dark:border-gray-600">
-                          <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        <div className="bg-white dark:bg-gray-700 px-3 py-2 border-b border-gray-200 dark:border-gray-600">
+                          <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
                             Round {match.round_number}
                           </span>
                         </div>
-                        <div className="p-4">
-                          <div className="flex items-center justify-between">
+                        <div className="p-3 bg-white dark:bg-gray-700">
+                          <div className="flex items-center justify-between gap-2">
                             {/* Team A */}
                             <div
                               className={`flex-1 ${
                                 teamAWon ? "opacity-100" : "opacity-60"
                               }`}
                             >
-                              <div className="flex items-center gap-2 mb-2">
-                                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white flex items-center justify-center font-semibold text-xs">
+                              <div className="flex items-center gap-2 mb-1.5">
+                                <div className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold text-xs">
                                   {getPlayerName(
                                     match.team_a_player1_id
                                   ).charAt(0)}
                                 </div>
-                                <span className="text-sm font-medium text-gray-900 dark:text-white">
+                                <span className="text-xs font-medium text-gray-900 dark:text-white truncate">
                                   {getPlayerName(match.team_a_player1_id)}
                                 </span>
                               </div>
                               <div className="flex items-center gap-2">
-                                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white flex items-center justify-center font-semibold text-xs">
+                                <div className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold text-xs">
                                   {getPlayerName(
                                     match.team_a_player2_id
                                   ).charAt(0)}
                                 </div>
-                                <span className="text-sm font-medium text-gray-900 dark:text-white">
+                                <span className="text-xs font-medium text-gray-900 dark:text-white truncate">
                                   {getPlayerName(match.team_a_player2_id)}
                                 </span>
                               </div>
                             </div>
 
                             {/* Score */}
-                            <div className="flex items-center gap-4 px-6">
+                            <div className="flex items-center gap-2 px-2 flex-shrink-0">
                               <div
-                                className={`text-3xl font-bold ${
+                                className={`text-2xl font-bold ${
                                   teamAWon ? "text-green-600" : "text-gray-400"
                                 }`}
                               >
                                 {match.team_a_score}
                               </div>
-                              <span className="text-gray-400">-</span>
+                              <span className="text-gray-400 text-sm">-</span>
                               <div
-                                className={`text-3xl font-bold ${
+                                className={`text-2xl font-bold ${
                                   !teamAWon ? "text-green-600" : "text-gray-400"
                                 }`}
                               >
@@ -609,21 +631,21 @@ export default function TournamentPage() {
                                 !teamAWon ? "opacity-100" : "opacity-60"
                               }`}
                             >
-                              <div className="flex items-center justify-end gap-2 mb-2">
-                                <span className="text-sm font-medium text-gray-900 dark:text-white">
+                              <div className="flex items-center justify-end gap-2 mb-1.5">
+                                <span className="text-xs font-medium text-gray-900 dark:text-white truncate">
                                   {getPlayerName(match.team_b_player1_id)}
                                 </span>
-                                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white flex items-center justify-center font-semibold text-xs">
+                                <div className="w-6 h-6 rounded-full bg-purple-600 text-white flex items-center justify-center font-semibold text-xs">
                                   {getPlayerName(
                                     match.team_b_player1_id
                                   ).charAt(0)}
                                 </div>
                               </div>
                               <div className="flex items-center justify-end gap-2">
-                                <span className="text-sm font-medium text-gray-900 dark:text-white">
+                                <span className="text-xs font-medium text-gray-900 dark:text-white truncate">
                                   {getPlayerName(match.team_b_player2_id)}
                                 </span>
-                                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white flex items-center justify-center font-semibold text-xs">
+                                <div className="w-6 h-6 rounded-full bg-purple-600 text-white flex items-center justify-center font-semibold text-xs">
                                   {getPlayerName(
                                     match.team_b_player2_id
                                   ).charAt(0)}
@@ -642,20 +664,20 @@ export default function TournamentPage() {
         )}
 
         {/* Leaderboard */}
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 text-center">
+        <div>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3 text-center">
             Leaderboard
           </h2>
-          <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+          <div className="bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div className="divide-y divide-gray-200 dark:divide-gray-700">
               {players.map((player, index) => (
                 <div
                   key={player.id}
-                  className="flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+                  className="flex items-center justify-between p-3 sm:p-4 hover:bg-white dark:hover:bg-gray-700 transition-colors"
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3">
                     <div
-                      className={`text-2xl font-bold ${
+                      className={`text-lg sm:text-xl font-bold min-w-[24px] ${
                         index === 0
                           ? "text-yellow-500"
                           : index === 1
@@ -667,18 +689,18 @@ export default function TournamentPage() {
                     >
                       {index + 1}
                     </div>
-                    <div>
-                      <p className="font-semibold text-gray-900 dark:text-white">
+                    <div className="min-w-0">
+                      <p className="font-semibold text-gray-900 dark:text-white text-sm truncate">
                         {player.player_name}
                       </p>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-xs text-gray-500">
                         {player.matches_played} matches • {player.matches_won}{" "}
                         wins
                       </p>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-2xl font-bold text-gopadel-medium">
+                  <div className="text-right flex-shrink-0">
+                    <p className="text-xl sm:text-2xl font-bold text-gopadel-medium">
                       {player.total_points}
                     </p>
                     <p className="text-xs text-gray-500">points</p>
