@@ -298,6 +298,7 @@ function PlayersStep({
   const [currentUser, setCurrentUser] = useState<SupabaseUser | null>(null);
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState<string[]>([]);
+  const [hasInitialized, setHasInitialized] = useState(false);
 
   useEffect(() => {
     // Fetch current user
@@ -308,6 +309,20 @@ function PlayersStep({
     };
     fetchUser();
   }, []);
+
+  // Auto-fill first player with current user
+  useEffect(() => {
+    if (currentUser && !hasInitialized && players.length === 1 && players[0].name === "") {
+      const newPlayers = [{
+        name: currentUser.user_metadata?.full_name || currentUser.email || "Me",
+        email: currentUser.email,
+        userId: currentUser.id,
+        avatarUrl: currentUser.user_metadata?.avatar_url || currentUser.user_metadata?.picture,
+      }, { name: "" }];
+      onPlayersChange(newPlayers);
+      setHasInitialized(true);
+    }
+  }, [currentUser, hasInitialized, players, onPlayersChange]);
 
   const updatePlayer = (index: number, name: string) => {
     const newPlayers = [...players];
@@ -366,8 +381,9 @@ function PlayersStep({
     const query = players[index]?.name?.toLowerCase() || "";
     if (query.length === 0) return false;
 
-    // Check if already selected this user
-    if (players[index]?.userId === currentUser.id) return false;
+    // Check if this user is already added in ANY cell (including current one)
+    const isUserAlreadyAdded = players.some((player) => player.userId === currentUser.id);
+    if (isUserAlreadyAdded) return false;
 
     // Search by name or email
     const userName = currentUser.user_metadata?.full_name?.toLowerCase() || "";
