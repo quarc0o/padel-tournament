@@ -36,6 +36,7 @@ export default function TournamentPage() {
   const [submitting, setSubmitting] = useState(false);
   const [showMatchHistory, setShowMatchHistory] = useState(false);
   const [viewMatches, setViewMatches] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   useEffect(() => {
     // Check if we should show matches view
@@ -97,7 +98,8 @@ export default function TournamentPage() {
           // If not viewing matches explicitly, redirect to results
           const urlParams = new URLSearchParams(window.location.search);
           if (urlParams.get("view") !== "matches") {
-            router.push(`/tournament/${tournamentId}/results`);
+            setIsRedirecting(true);
+            router.replace(`/tournament/${tournamentId}/results`);
             return;
           }
         } else {
@@ -216,9 +218,9 @@ export default function TournamentPage() {
 
       if (result.tournamentComplete) {
         console.log("🏆 Tournament Complete!");
-        alert("Score saved! Tournament is complete! 🎉");
+        setIsRedirecting(true);
         // Redirect to results page
-        router.push(`/tournament/${tournamentId}/results`);
+        router.replace(`/tournament/${tournamentId}/results`);
       } else {
         console.log("✅ Next match generated for Round", result.nextRound);
         alert(`Score saved! Moving to Round ${result.nextRound}...`);
@@ -233,13 +235,15 @@ export default function TournamentPage() {
     }
   };
 
-  if (loading) {
+  if (loading || isRedirecting) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="text-4xl mb-4">🎾</div>
+          <div className="text-4xl mb-4">
+            {isRedirecting ? "🏆" : "🎾"}
+          </div>
           <p className="text-gray-600 dark:text-gray-400">
-            Loading tournament...
+            {isRedirecting ? "Redirecting to results..." : "Loading tournament..."}
           </p>
         </div>
       </div>
