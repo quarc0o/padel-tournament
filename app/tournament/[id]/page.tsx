@@ -7,6 +7,7 @@ import { Database } from "@/types/database";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { completeMatchAndGenerateNext } from "@/lib/matchGeneration";
+import { PlayerAvatar } from "@/components/PlayerAvatar";
 
 type Tournament = Database["public"]["Tables"]["tournaments"]["Row"];
 type Player = Database["public"]["Tables"]["tournament_players"]["Row"];
@@ -339,9 +340,11 @@ export default function TournamentPage() {
                   {/* Player 1 */}
                   <div className="bg-white dark:bg-gray-700 rounded-lg p-3 border-2 border-gopadel-light dark:border-gopadel-medium">
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold text-sm">
-                        {currentMatch.team_a_player1.player_name.charAt(0)}
-                      </div>
+                      <PlayerAvatar
+                        name={currentMatch.team_a_player1.player_name}
+                        avatarUrl={currentMatch.team_a_player1.avatar_url}
+                        size="lg"
+                      />
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-gray-900 dark:text-white text-sm truncate">
                           {currentMatch.team_a_player1.player_name}
@@ -356,9 +359,11 @@ export default function TournamentPage() {
                   {/* Player 2 */}
                   <div className="bg-white dark:bg-gray-700 rounded-lg p-3 border-2 border-gopadel-light dark:border-gopadel-medium">
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold text-sm">
-                        {currentMatch.team_a_player2.player_name.charAt(0)}
-                      </div>
+                      <PlayerAvatar
+                        name={currentMatch.team_a_player2.player_name}
+                        avatarUrl={currentMatch.team_a_player2.avatar_url}
+                        size="lg"
+                      />
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-gray-900 dark:text-white text-sm truncate">
                           {currentMatch.team_a_player2.player_name}
@@ -407,9 +412,11 @@ export default function TournamentPage() {
                   {/* Player 1 */}
                   <div className="bg-white dark:bg-gray-700 rounded-lg p-3 border-2 border-gopadel-cyan dark:border-gopadel-cyan">
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-purple-600 text-white flex items-center justify-center font-semibold text-sm">
-                        {currentMatch.team_b_player1.player_name.charAt(0)}
-                      </div>
+                      <PlayerAvatar
+                        name={currentMatch.team_b_player1.player_name}
+                        avatarUrl={currentMatch.team_b_player1.avatar_url}
+                        size="lg"
+                      />
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-gray-900 dark:text-white text-sm truncate">
                           {currentMatch.team_b_player1.player_name}
@@ -424,9 +431,11 @@ export default function TournamentPage() {
                   {/* Player 2 */}
                   <div className="bg-white dark:bg-gray-700 rounded-lg p-3 border-2 border-gopadel-cyan dark:border-gopadel-cyan">
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-purple-600 text-white flex items-center justify-center font-semibold text-sm">
-                        {currentMatch.team_b_player2.player_name.charAt(0)}
-                      </div>
+                      <PlayerAvatar
+                        name={currentMatch.team_b_player2.player_name}
+                        avatarUrl={currentMatch.team_b_player2.avatar_url}
+                        size="lg"
+                      />
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-gray-900 dark:text-white text-sm truncate">
                           {currentMatch.team_b_player2.player_name}
@@ -490,10 +499,35 @@ export default function TournamentPage() {
             )}
 
             {currentMatch.status === "completed" && (
-              <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg p-4 text-center">
-                <p className="text-green-800 dark:text-green-200 font-semibold text-sm">
-                  ✓ Match completed! Generating next round...
-                </p>
+              <div>
+                {tournament.status === "completed" ? (
+                  /* Tournament Complete - Show Results Link */
+                  <div className="bg-gradient-to-r from-yellow-50 to-green-50 dark:from-yellow-900/20 dark:to-green-900/20 border-2 border-yellow-400 dark:border-yellow-600 rounded-lg p-6 text-center">
+                    <div className="text-5xl mb-3">🏆</div>
+                    <p className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                      Tournament Complete!
+                    </p>
+                    <p className="text-gray-700 dark:text-gray-300 mb-4 text-sm">
+                      All matches have been played. Check out the final standings!
+                    </p>
+                    <Button
+                      size="lg"
+                      asChild
+                      className="w-full"
+                    >
+                      <Link href={`/tournament/${tournamentId}/results`}>
+                        View Results & Scoreboard
+                      </Link>
+                    </Button>
+                  </div>
+                ) : (
+                  /* Next Round Coming - Show Generation Message */
+                  <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg p-4 text-center">
+                    <p className="text-green-800 dark:text-green-200 font-semibold text-sm">
+                      ✓ Match completed! Generating next round...
+                    </p>
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -689,6 +723,11 @@ export default function TournamentPage() {
                     >
                       {index + 1}
                     </div>
+                    <PlayerAvatar
+                      name={player.player_name}
+                      avatarUrl={player.avatar_url}
+                      size="md"
+                    />
                     <div className="min-w-0">
                       <p className="font-semibold text-gray-900 dark:text-white text-sm truncate">
                         {player.player_name}

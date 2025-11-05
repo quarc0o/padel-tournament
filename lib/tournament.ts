@@ -2,10 +2,17 @@ import { createClient } from "@/utils/supabase/client";
 
 export type TournamentType = "americano" | "mexicano";
 
+export interface PlayerInput {
+  name: string;
+  email?: string;
+  userId?: string;
+  avatarUrl?: string;
+}
+
 export interface TournamentData {
   tournamentType: TournamentType;
   targetPoints: number;
-  players: string[];
+  players: PlayerInput[];
 }
 
 /**
@@ -17,6 +24,12 @@ export async function createTournament(data: TournamentData, userId: string) {
   try {
     const tournamentName = `${data.tournamentType.charAt(0).toUpperCase() + data.tournamentType.slice(1)} - ${new Date().toLocaleDateString()}`;
 
+    // Prepare player data with names, emails, user_ids, and avatar_urls
+    const playerNames = data.players.map(p => p.name);
+    const playerEmails = data.players.map(p => p.email || null);
+    const playerUserIds = data.players.map(p => p.userId || null);
+    const playerAvatarUrls = data.players.map(p => p.avatarUrl || null);
+
     // Call RPC function to create tournament, add players, and generate first match
     const { data: result, error } = await supabase.rpc(
       "create_tournament_with_players",
@@ -25,7 +38,10 @@ export async function createTournament(data: TournamentData, userId: string) {
         p_tournament_type: data.tournamentType,
         p_target_points: data.targetPoints,
         p_created_by: userId,
-        p_player_names: data.players,
+        p_player_names: playerNames,
+        p_player_emails: playerEmails,
+        p_player_user_ids: playerUserIds,
+        p_player_avatar_urls: playerAvatarUrls,
       }
     );
 

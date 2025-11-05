@@ -6,15 +6,10 @@ import { createClient } from "@/utils/supabase/client";
 import { Database } from "@/types/database";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { PlayerAvatar } from "@/components/PlayerAvatar";
 
 type Tournament = Database["public"]["Tables"]["tournaments"]["Row"];
 type Player = Database["public"]["Tables"]["tournament_players"]["Row"];
-
-interface PlayerWithProfile extends Player {
-  profileImage?: string;
-  email?: string;
-  fullName?: string;
-}
 
 export default function TournamentResultsPage() {
   const params = useParams();
@@ -22,7 +17,7 @@ export default function TournamentResultsPage() {
   const tournamentId = params.id as string;
 
   const [tournament, setTournament] = useState<Tournament | null>(null);
-  const [players, setPlayers] = useState<PlayerWithProfile[]>([]);
+  const [players, setPlayers] = useState<Player[]>([]);
   const [loading, setLoading] = useState(true);
   const [shareUrl, setShareUrl] = useState("");
   const [copied, setCopied] = useState(false);
@@ -55,21 +50,7 @@ export default function TournamentResultsPage() {
 
       if (playersError) throw playersError;
 
-      // Get current user to check profile images
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      // Enhance players with profile data if available
-      const enhancedPlayers: PlayerWithProfile[] = playersData.map((player) => ({
-        ...player,
-        // For now, we'll use generic data. In a real app, you'd fetch user profiles
-        profileImage: user?.user_metadata?.avatar_url || user?.user_metadata?.picture,
-        email: user?.email,
-        fullName: user?.user_metadata?.full_name,
-      }));
-
-      setPlayers(enhancedPlayers);
+      setPlayers(playersData);
     } catch (error) {
       console.error("Error fetching tournament results:", error);
       alert("Failed to load tournament results");
@@ -99,15 +80,6 @@ export default function TournamentResultsPage() {
     navigator.clipboard.writeText(shareUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-  };
-
-  const getInitials = (name: string) => {
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
   };
 
   const getMedalEmoji = (position: number) => {
@@ -179,16 +151,13 @@ export default function TournamentResultsPage() {
               {topThree[1] && (
                 <div className="flex flex-col items-center flex-1 max-w-xs">
                   <div className="mb-4 relative">
-                    <div className="w-24 h-24 rounded-full bg-gradient-to-br from-gray-100 to-gray-300 dark:from-gray-700 dark:to-gray-600 shadow-lg flex items-center justify-center text-3xl font-bold text-gray-700 dark:text-gray-200 border-4 border-gray-300 dark:border-gray-500">
-                      {topThree[1].profileImage ? (
-                        <img
-                          src={topThree[1].profileImage}
-                          alt={topThree[1].player_name}
-                          className="w-full h-full rounded-full object-cover"
-                        />
-                      ) : (
-                        getInitials(topThree[1].player_name)
-                      )}
+                    <div className="w-24 h-24 rounded-full shadow-lg border-4 border-gray-300 dark:border-gray-500 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-300 dark:from-gray-700 dark:to-gray-600 flex items-center justify-center">
+                      <PlayerAvatar
+                        name={topThree[1].player_name}
+                        avatarUrl={topThree[1].avatar_url}
+                        size="xl"
+                        className="w-full h-full text-3xl"
+                      />
                     </div>
                     <div className="absolute -top-2 -right-2 text-4xl">
                       {getMedalEmoji(1)}
@@ -211,16 +180,13 @@ export default function TournamentResultsPage() {
               {topThree[0] && (
                 <div className="flex flex-col items-center flex-1 max-w-xs">
                   <div className="mb-4 relative">
-                    <div className="w-32 h-32 rounded-full bg-gradient-to-br from-yellow-100 to-yellow-300 dark:from-yellow-600 dark:to-yellow-500 shadow-lg flex items-center justify-center text-4xl font-bold text-yellow-700 dark:text-yellow-100 border-4 border-yellow-400 dark:border-yellow-500">
-                      {topThree[0].profileImage ? (
-                        <img
-                          src={topThree[0].profileImage}
-                          alt={topThree[0].player_name}
-                          className="w-full h-full rounded-full object-cover"
-                        />
-                      ) : (
-                        getInitials(topThree[0].player_name)
-                      )}
+                    <div className="w-32 h-32 rounded-full shadow-lg border-4 border-yellow-400 dark:border-yellow-500 overflow-hidden bg-gradient-to-br from-yellow-100 to-yellow-300 dark:from-yellow-600 dark:to-yellow-500 flex items-center justify-center">
+                      <PlayerAvatar
+                        name={topThree[0].player_name}
+                        avatarUrl={topThree[0].avatar_url}
+                        size="xl"
+                        className="w-full h-full text-4xl"
+                      />
                     </div>
                     <div className="absolute -top-3 -right-3 text-5xl">
                       {getMedalEmoji(0)}
@@ -243,16 +209,13 @@ export default function TournamentResultsPage() {
               {topThree[2] && (
                 <div className="flex flex-col items-center flex-1 max-w-xs">
                   <div className="mb-4 relative">
-                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-orange-100 to-orange-300 dark:from-orange-700 dark:to-orange-600 shadow-lg flex items-center justify-center text-2xl font-bold text-orange-700 dark:text-orange-200 border-4 border-orange-300 dark:border-orange-500">
-                      {topThree[2].profileImage ? (
-                        <img
-                          src={topThree[2].profileImage}
-                          alt={topThree[2].player_name}
-                          className="w-full h-full rounded-full object-cover"
-                        />
-                      ) : (
-                        getInitials(topThree[2].player_name)
-                      )}
+                    <div className="w-20 h-20 rounded-full shadow-lg border-4 border-orange-300 dark:border-orange-500 overflow-hidden bg-gradient-to-br from-orange-100 to-orange-300 dark:from-orange-700 dark:to-orange-600 flex items-center justify-center">
+                      <PlayerAvatar
+                        name={topThree[2].player_name}
+                        avatarUrl={topThree[2].avatar_url}
+                        size="lg"
+                        className="w-full h-full text-2xl"
+                      />
                     </div>
                     <div className="absolute -top-2 -right-2 text-3xl">
                       {getMedalEmoji(2)}
@@ -291,17 +254,11 @@ export default function TournamentResultsPage() {
                       <div className="text-2xl font-bold text-gray-400 dark:text-gray-500 w-10 text-center">
                         {index + 4}
                       </div>
-                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gopadel-medium to-gopadel-cyan flex items-center justify-center text-white text-lg font-bold">
-                        {player.profileImage ? (
-                          <img
-                            src={player.profileImage}
-                            alt={player.player_name}
-                            className="w-full h-full rounded-full object-cover"
-                          />
-                        ) : (
-                          getInitials(player.player_name)
-                        )}
-                      </div>
+                      <PlayerAvatar
+                        name={player.player_name}
+                        avatarUrl={player.avatar_url}
+                        size="lg"
+                      />
                       <div className="flex-1">
                         <p className="font-semibold text-gray-900 dark:text-white text-lg">
                           {player.player_name}
