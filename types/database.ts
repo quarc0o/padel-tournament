@@ -20,7 +20,7 @@ export type Database = {
           created_at: string;
           id: string;
           round_number: number;
-          sideline_player_id: string | null;
+          sideline_player_ids: string[] | null;
           started_at: string | null;
           status: Database["public"]["Enums"]["match_status"];
           team_a_player1_id: string;
@@ -36,7 +36,7 @@ export type Database = {
           created_at?: string;
           id?: string;
           round_number: number;
-          sideline_player_id?: string | null;
+          sideline_player_ids?: string[] | null;
           started_at?: string | null;
           status?: Database["public"]["Enums"]["match_status"];
           team_a_player1_id: string;
@@ -52,7 +52,7 @@ export type Database = {
           created_at?: string;
           id?: string;
           round_number?: number;
-          sideline_player_id?: string | null;
+          sideline_player_ids?: string[] | null;
           started_at?: string | null;
           status?: Database["public"]["Enums"]["match_status"];
           team_a_player1_id?: string;
@@ -64,13 +64,6 @@ export type Database = {
           tournament_id?: string;
         };
         Relationships: [
-          {
-            foreignKeyName: "matches_sideline_player_id_fkey";
-            columns: ["sideline_player_id"];
-            isOneToOne: false;
-            referencedRelation: "tournament_players";
-            referencedColumns: ["id"];
-          },
           {
             foreignKeyName: "matches_team_a_player1_id_fkey";
             columns: ["team_a_player1_id"];

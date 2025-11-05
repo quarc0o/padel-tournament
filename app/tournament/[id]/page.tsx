@@ -18,7 +18,7 @@ interface MatchWithPlayers extends Match {
   team_a_player2: Player;
   team_b_player1: Player;
   team_b_player2: Player;
-  sideline_player?: Player | null;
+  sideline_players?: Player[];
 }
 
 export default function TournamentPage() {
@@ -128,9 +128,9 @@ export default function TournamentPage() {
           matchData.team_b_player2_id,
         ];
 
-        // Add sideline player if present
-        if (matchData.sideline_player_id) {
-          playerIds.push(matchData.sideline_player_id);
+        // Add sideline players if present
+        if (matchData.sideline_player_ids && matchData.sideline_player_ids.length > 0) {
+          playerIds.push(...matchData.sideline_player_ids);
         }
 
         const { data: matchPlayers, error: matchPlayersError } = await supabase
@@ -141,6 +141,12 @@ export default function TournamentPage() {
         if (matchPlayersError) throw matchPlayersError;
 
         // Map players to match
+        const sidelinePlayers = matchData.sideline_player_ids
+          ? matchData.sideline_player_ids
+              .map((id) => matchPlayers.find((p) => p.id === id))
+              .filter((p): p is Player => p !== undefined)
+          : [];
+
         const matchWithPlayers: MatchWithPlayers = {
           ...matchData,
           team_a_player1: matchPlayers.find(
@@ -155,9 +161,7 @@ export default function TournamentPage() {
           team_b_player2: matchPlayers.find(
             (p) => p.id === matchData.team_b_player2_id
           )!,
-          sideline_player: matchData.sideline_player_id
-            ? matchPlayers.find((p) => p.id === matchData.sideline_player_id) || null
-            : null,
+          sideline_players: sidelinePlayers,
         };
 
         setCurrentMatch(matchWithPlayers);
@@ -483,56 +487,61 @@ export default function TournamentPage() {
                 </div>
               </div>
 
-              {/* Sideline Player Display */}
-              {currentMatch.sideline_player && (
+              {/* Sideline Players Display */}
+              {currentMatch.sideline_players && currentMatch.sideline_players.length > 0 && (
                 <div className="mt-4 border-t border-gray-200 dark:border-gray-600 pt-4">
                   <div className="bg-yellow-50 dark:bg-yellow-900/20 border-2 border-yellow-400 dark:border-yellow-600 rounded-lg p-4">
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="flex items-center gap-3 flex-1">
-                        <div className="bg-yellow-500 text-white rounded-full p-2">
-                          <svg
-                            className="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"
-                            />
-                          </svg>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <PlayerAvatar
-                            name={currentMatch.sideline_player.player_name}
-                            avatarUrl={currentMatch.sideline_player.avatar_url}
-                            size="lg"
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="bg-yellow-500 text-white rounded-full p-2">
+                        <svg
+                          className="w-5 h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"
                           />
-                          <div>
-                            <p className="font-bold text-gray-900 dark:text-white text-sm">
-                              {currentMatch.sideline_player.player_name}
+                        </svg>
+                      </div>
+                      <div>
+                        <p className="font-bold text-gray-900 dark:text-white text-sm">
+                          On the Bench ({currentMatch.sideline_players.length})
+                        </p>
+                        <p className="text-xs text-yellow-700 dark:text-yellow-400">
+                          Each receives ½ of total points
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      {currentMatch.sideline_players.map((player) => (
+                        <div key={player.id} className="flex items-center justify-between gap-3 bg-white dark:bg-gray-700 rounded-lg p-3">
+                          <div className="flex items-center gap-2">
+                            <PlayerAvatar
+                              name={player.player_name}
+                              avatarUrl={player.avatar_url}
+                              size="md"
+                            />
+                            <p className="font-medium text-gray-900 dark:text-white text-sm">
+                              {player.player_name}
                             </p>
-                            <p className="text-xs text-yellow-700 dark:text-yellow-400 font-semibold">
-                              On the Bench
+                          </div>
+                          <div className="text-right">
+                            <p className="text-lg font-bold text-yellow-600 dark:text-yellow-400">
+                              {teamAScore !== "" && teamBScore !== ""
+                                ? Math.floor(((teamAScore as number) + (teamBScore as number)) / 2)
+                                : "?"}
+                            </p>
+                            <p className="text-xs text-gray-600 dark:text-gray-400">
+                              points
                             </p>
                           </div>
                         </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
-                          Will receive
-                        </p>
-                        <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
-                          {teamAScore !== "" && teamBScore !== ""
-                            ? Math.floor(((teamAScore as number) + (teamBScore as number)) / 2)
-                            : "?"}
-                        </p>
-                        <p className="text-xs text-gray-600 dark:text-gray-400">
-                          points (½ total)
-                        </p>
-                      </div>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -664,7 +673,7 @@ export default function TournamentPage() {
                   {completedMatches.map((match) => {
                     const teamAWon =
                       (match.team_a_score || 0) > (match.team_b_score || 0);
-                    const sidelinePoints = match.sideline_player_id
+                    const sidelinePoints = match.sideline_player_ids && match.sideline_player_ids.length > 0
                       ? Math.floor(((match.team_a_score || 0) + (match.team_b_score || 0)) / 2)
                       : 0;
                     return (
@@ -755,24 +764,28 @@ export default function TournamentPage() {
                             </div>
                           </div>
 
-                          {/* Sideline Player in History */}
-                          {match.sideline_player_id && (
+                          {/* Sideline Players in History */}
+                          {match.sideline_player_ids && match.sideline_player_ids.length > 0 && (
                             <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-600">
-                              <div className="flex items-center justify-between gap-2">
-                                <div className="flex items-center gap-2">
-                                  <div className="w-6 h-6 rounded-full bg-yellow-500 text-white flex items-center justify-center font-semibold text-xs">
-                                    {getPlayerName(match.sideline_player_id).charAt(0)}
+                              <p className="text-xs text-yellow-600 dark:text-yellow-400 font-semibold mb-2">
+                                On Bench ({match.sideline_player_ids.length})
+                              </p>
+                              <div className="space-y-1.5">
+                                {match.sideline_player_ids.map((playerId) => (
+                                  <div key={playerId} className="flex items-center justify-between gap-2">
+                                    <div className="flex items-center gap-2">
+                                      <div className="w-6 h-6 rounded-full bg-yellow-500 text-white flex items-center justify-center font-semibold text-xs">
+                                        {getPlayerName(playerId).charAt(0)}
+                                      </div>
+                                      <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
+                                        {getPlayerName(playerId)}
+                                      </span>
+                                    </div>
+                                    <span className="text-xs font-bold text-yellow-600 dark:text-yellow-400">
+                                      +{sidelinePoints} pts
+                                    </span>
                                   </div>
-                                  <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
-                                    {getPlayerName(match.sideline_player_id)}
-                                  </span>
-                                  <span className="text-xs text-yellow-600 dark:text-yellow-400 font-semibold">
-                                    (Bench)
-                                  </span>
-                                </div>
-                                <span className="text-xs font-bold text-yellow-600 dark:text-yellow-400">
-                                  +{sidelinePoints} pts
-                                </span>
+                                ))}
                               </div>
                             </div>
                           )}
