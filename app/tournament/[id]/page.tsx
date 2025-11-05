@@ -499,10 +499,35 @@ export default function TournamentPage() {
             )}
 
             {currentMatch.status === "completed" && (
-              <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg p-4 text-center">
-                <p className="text-green-800 dark:text-green-200 font-semibold text-sm">
-                  ✓ Match completed! Generating next round...
-                </p>
+              <div>
+                {tournament.status === "completed" ? (
+                  /* Tournament Complete - Show Results Link */
+                  <div className="bg-gradient-to-r from-yellow-50 to-green-50 dark:from-yellow-900/20 dark:to-green-900/20 border-2 border-yellow-400 dark:border-yellow-600 rounded-lg p-6 text-center">
+                    <div className="text-5xl mb-3">🏆</div>
+                    <p className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                      Tournament Complete!
+                    </p>
+                    <p className="text-gray-700 dark:text-gray-300 mb-4 text-sm">
+                      All matches have been played. Check out the final standings!
+                    </p>
+                    <Button
+                      size="lg"
+                      asChild
+                      className="w-full"
+                    >
+                      <Link href={`/tournament/${tournamentId}/results`}>
+                        View Results & Scoreboard
+                      </Link>
+                    </Button>
+                  </div>
+                ) : (
+                  /* Next Round Coming - Show Generation Message */
+                  <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg p-4 text-center">
+                    <p className="text-green-800 dark:text-green-200 font-semibold text-sm">
+                      ✓ Match completed! Generating next round...
+                    </p>
+                  </div>
+                )}
               </div>
             )}
           </div>
