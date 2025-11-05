@@ -205,13 +205,14 @@ export default function TournamentPage() {
       if (result.tournamentComplete) {
         console.log("🏆 Tournament Complete!");
         alert("Score saved! Tournament is complete! 🎉");
+        // Redirect to results page
+        router.push(`/tournament/${tournamentId}/results`);
       } else {
         console.log("✅ Next match generated for Round", result.nextRound);
         alert(`Score saved! Moving to Round ${result.nextRound}...`);
+        // Reload the page to show the new match
+        window.location.reload();
       }
-
-      // Reload the page to show the new match or final standings
-      window.location.reload();
     } catch (error) {
       console.error("Error saving score:", error);
       alert("Failed to save score");
@@ -448,12 +449,24 @@ export default function TournamentPage() {
           </div>
         ) : (
           <div className="text-center py-12">
-            <p className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-              Tournament Complete! 🎉
-            </p>
-            <p className="text-gray-600 dark:text-gray-400">
-              All rounds have been played
-            </p>
+            <div className="bg-gradient-to-r from-purple-600 via-pink-500 to-orange-500 rounded-3xl p-12 shadow-2xl max-w-2xl mx-auto">
+              <div className="text-7xl mb-6 animate-bounce">🏆</div>
+              <p className="text-4xl font-black text-white mb-4">
+                Tournament Complete!
+              </p>
+              <p className="text-white/90 text-lg mb-8">
+                All rounds have been played. Check out the final results!
+              </p>
+              <Button
+                size="lg"
+                asChild
+                className="bg-white text-purple-600 hover:bg-white/90 font-bold text-lg px-8 py-6 shadow-xl"
+              >
+                <Link href={`/tournament/${tournamentId}/results`}>
+                  View Final Results & Share 🎉
+                </Link>
+              </Button>
+            </div>
           </div>
         )}
 
