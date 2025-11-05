@@ -60,6 +60,18 @@ export default function TournamentPage() {
       if (tournamentError) throw tournamentError;
       setTournament(tournamentData);
 
+      // Check if tournament is completed and redirect to results
+      const urlParams = new URLSearchParams(window.location.search);
+      if (
+        tournamentData.status === "completed" &&
+        urlParams.get("view") !== "matches"
+      ) {
+        console.log("Tournament is completed - redirecting to results");
+        setIsRedirecting(true);
+        router.replace(`/tournament/${tournamentId}/results`);
+        return;
+      }
+
       // Fetch all players
       const { data: playersData, error: playersError } = await supabase
         .from("tournament_players")
