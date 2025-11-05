@@ -129,7 +129,10 @@ export default function TournamentPage() {
         ];
 
         // Add sideline players if present
-        if (matchData.sideline_player_ids && matchData.sideline_player_ids.length > 0) {
+        if (
+          matchData.sideline_player_ids &&
+          matchData.sideline_player_ids.length > 0
+        ) {
           playerIds.push(...matchData.sideline_player_ids);
         }
 
@@ -143,8 +146,10 @@ export default function TournamentPage() {
         // Map players to match
         const sidelinePlayers = matchData.sideline_player_ids
           ? matchData.sideline_player_ids
-              .map((id) => matchPlayers.find((p) => p.id === id))
-              .filter((p): p is Player => p !== undefined)
+              .map((id: string) =>
+                matchPlayers.find((p: Player) => p.id === id)
+              )
+              .filter((p: Player | undefined): p is Player => p !== undefined)
           : [];
 
         const matchWithPlayers: MatchWithPlayers = {
@@ -265,11 +270,11 @@ export default function TournamentPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="text-4xl mb-4">
-            {isRedirecting ? "🏆" : "🎾"}
-          </div>
+          <div className="text-4xl mb-4">{isRedirecting ? "🏆" : "🎾"}</div>
           <p className="text-gray-600 dark:text-gray-400">
-            {isRedirecting ? "Redirecting to results..." : "Loading tournament..."}
+            {isRedirecting
+              ? "Redirecting to results..."
+              : "Loading tournament..."}
           </p>
         </div>
       </div>
@@ -323,7 +328,9 @@ export default function TournamentPage() {
             <span>•</span>
             <span>Target: {tournament.target_points} pts</span>
             <span>•</span>
-            <span className="font-semibold">Round {tournament.current_round}</span>
+            <span className="font-semibold">
+              Round {tournament.current_round}
+            </span>
           </div>
         </div>
 
@@ -336,7 +343,9 @@ export default function TournamentPage() {
               <div className="text-center mb-4">
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   Match Status:{" "}
-                  <span className="capitalize font-medium">{currentMatch.status}</span>
+                  <span className="capitalize font-medium">
+                    {currentMatch.status}
+                  </span>
                 </p>
               </div>
 
@@ -488,70 +497,80 @@ export default function TournamentPage() {
               </div>
 
               {/* Sideline Players Display */}
-              {currentMatch.sideline_players && currentMatch.sideline_players.length > 0 && (
-                <div className="mt-4 border-t border-gray-200 dark:border-gray-600 pt-4">
-                  <div className="bg-yellow-50 dark:bg-yellow-900/20 border-2 border-yellow-400 dark:border-yellow-600 rounded-lg p-4">
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="bg-yellow-500 text-white rounded-full p-2">
-                        <svg
-                          className="w-5 h-5"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"
-                          />
-                        </svg>
-                      </div>
-                      <div>
-                        <p className="font-bold text-gray-900 dark:text-white text-sm">
-                          On the Bench ({currentMatch.sideline_players.length})
-                        </p>
-                        <p className="text-xs text-yellow-700 dark:text-yellow-400">
-                          Each receives ½ of total points
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      {currentMatch.sideline_players.map((player) => (
-                        <div key={player.id} className="flex items-center justify-between gap-3 bg-white dark:bg-gray-700 rounded-lg p-3">
-                          <div className="flex items-center gap-2">
-                            <PlayerAvatar
-                              name={player.player_name}
-                              avatarUrl={player.avatar_url}
-                              size="md"
+              {currentMatch.sideline_players &&
+                currentMatch.sideline_players.length > 0 && (
+                  <div className="mt-4 border-t border-gray-200 dark:border-gray-600 pt-4">
+                    <div className="bg-yellow-50 dark:bg-yellow-900/20 border-2 border-yellow-400 dark:border-yellow-600 rounded-lg p-4">
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="bg-yellow-500 text-white rounded-full p-2">
+                          <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"
                             />
-                            <p className="font-medium text-gray-900 dark:text-white text-sm">
-                              {player.player_name}
-                            </p>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-lg font-bold text-yellow-600 dark:text-yellow-400">
-                              {teamAScore !== "" && teamBScore !== ""
-                                ? Math.floor(((teamAScore as number) + (teamBScore as number)) / 2)
-                                : "?"}
-                            </p>
-                            <p className="text-xs text-gray-600 dark:text-gray-400">
-                              points
-                            </p>
-                          </div>
+                          </svg>
                         </div>
-                      ))}
+                        <div>
+                          <p className="font-bold text-gray-900 dark:text-white text-sm">
+                            On the Bench ({currentMatch.sideline_players.length}
+                            )
+                          </p>
+                          <p className="text-xs text-yellow-700 dark:text-yellow-400">
+                            Each receives ½ of total points
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        {currentMatch.sideline_players.map((player) => (
+                          <div
+                            key={player.id}
+                            className="flex items-center justify-between gap-3 bg-white dark:bg-gray-700 rounded-lg p-3"
+                          >
+                            <div className="flex items-center gap-2">
+                              <PlayerAvatar
+                                name={player.player_name}
+                                avatarUrl={player.avatar_url}
+                                size="md"
+                              />
+                              <p className="font-medium text-gray-900 dark:text-white text-sm">
+                                {player.player_name}
+                              </p>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-lg font-bold text-yellow-600 dark:text-yellow-400">
+                                {teamAScore !== "" && teamBScore !== ""
+                                  ? Math.floor(
+                                      ((teamAScore as number) +
+                                        (teamBScore as number)) /
+                                        2
+                                    )
+                                  : "?"}
+                              </p>
+                              <p className="text-xs text-gray-600 dark:text-gray-400">
+                                points
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
+                )}
 
               {/* Helper Text */}
               {currentMatch.status === "pending" && (
                 <div className="mt-4 text-center">
                   <p className="text-xs text-gray-500 dark:text-gray-400">
-                    Enter one score - the other auto-calculates to {tournament.target_points}
+                    Enter one score - the other auto-calculates to{" "}
+                    {tournament.target_points}
                   </p>
                 </div>
               )}
@@ -562,9 +581,7 @@ export default function TournamentPage() {
               <Button
                 size="lg"
                 onClick={handleSubmitScore}
-                disabled={
-                  teamAScore === "" || teamBScore === "" || submitting
-                }
+                disabled={teamAScore === "" || teamBScore === "" || submitting}
                 className="w-full"
               >
                 {submitting ? "Saving..." : "Submit Score & Continue"}
@@ -581,13 +598,10 @@ export default function TournamentPage() {
                       Tournament Complete!
                     </p>
                     <p className="text-gray-700 dark:text-gray-300 mb-4 text-sm">
-                      All matches have been played. Check out the final standings!
+                      All matches have been played. Check out the final
+                      standings!
                     </p>
-                    <Button
-                      size="lg"
-                      asChild
-                      className="w-full"
-                    >
+                    <Button size="lg" asChild className="w-full">
                       <Link href={`/tournament/${tournamentId}/results`}>
                         View Results & Scoreboard
                       </Link>
@@ -612,12 +626,10 @@ export default function TournamentPage() {
                 Tournament Complete
               </p>
               <p className="text-gray-600 dark:text-gray-400 mb-6 text-sm">
-                All rounds have been played. View the final results below or check match history.
+                All rounds have been played. View the final results below or
+                check match history.
               </p>
-              <Button
-                size="lg"
-                asChild
-              >
+              <Button size="lg" asChild>
                 <Link href={`/tournament/${tournamentId}/results`}>
                   View Final Results
                 </Link>
@@ -673,9 +685,15 @@ export default function TournamentPage() {
                   {completedMatches.map((match) => {
                     const teamAWon =
                       (match.team_a_score || 0) > (match.team_b_score || 0);
-                    const sidelinePoints = match.sideline_player_ids && match.sideline_player_ids.length > 0
-                      ? Math.floor(((match.team_a_score || 0) + (match.team_b_score || 0)) / 2)
-                      : 0;
+                    const sidelinePoints =
+                      match.sideline_player_ids &&
+                      match.sideline_player_ids.length > 0
+                        ? Math.floor(
+                            ((match.team_a_score || 0) +
+                              (match.team_b_score || 0)) /
+                              2
+                          )
+                        : 0;
                     return (
                       <div
                         key={match.id}
@@ -765,30 +783,34 @@ export default function TournamentPage() {
                           </div>
 
                           {/* Sideline Players in History */}
-                          {match.sideline_player_ids && match.sideline_player_ids.length > 0 && (
-                            <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-600">
-                              <p className="text-xs text-yellow-600 dark:text-yellow-400 font-semibold mb-2">
-                                On Bench ({match.sideline_player_ids.length})
-                              </p>
-                              <div className="space-y-1.5">
-                                {match.sideline_player_ids.map((playerId) => (
-                                  <div key={playerId} className="flex items-center justify-between gap-2">
-                                    <div className="flex items-center gap-2">
-                                      <div className="w-6 h-6 rounded-full bg-yellow-500 text-white flex items-center justify-center font-semibold text-xs">
-                                        {getPlayerName(playerId).charAt(0)}
+                          {match.sideline_player_ids &&
+                            match.sideline_player_ids.length > 0 && (
+                              <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-600">
+                                <p className="text-xs text-yellow-600 dark:text-yellow-400 font-semibold mb-2">
+                                  On Bench ({match.sideline_player_ids.length})
+                                </p>
+                                <div className="space-y-1.5">
+                                  {match.sideline_player_ids.map((playerId) => (
+                                    <div
+                                      key={playerId}
+                                      className="flex items-center justify-between gap-2"
+                                    >
+                                      <div className="flex items-center gap-2">
+                                        <div className="w-6 h-6 rounded-full bg-yellow-500 text-white flex items-center justify-center font-semibold text-xs">
+                                          {getPlayerName(playerId).charAt(0)}
+                                        </div>
+                                        <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
+                                          {getPlayerName(playerId)}
+                                        </span>
                                       </div>
-                                      <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
-                                        {getPlayerName(playerId)}
+                                      <span className="text-xs font-bold text-yellow-600 dark:text-yellow-400">
+                                        +{sidelinePoints} pts
                                       </span>
                                     </div>
-                                    <span className="text-xs font-bold text-yellow-600 dark:text-yellow-400">
-                                      +{sidelinePoints} pts
-                                    </span>
-                                  </div>
-                                ))}
+                                  ))}
+                                </div>
                               </div>
-                            </div>
-                          )}
+                            )}
                         </div>
                       </div>
                     );
