@@ -455,66 +455,86 @@ function PlayersStep({
                 </div>
               )}
 
-              {/* Input Field with Label and Autocomplete */}
+              {/* Input Field or User Card */}
               <div className="flex-1 space-y-2 relative">
-                <Label
-                  htmlFor={`player-${index}`}
-                  className="sr-only"
-                >
-                  {index === 0 ? "First player name" : `Player ${index + 1} name`}
-                </Label>
-                <Input
-                  id={`player-${index}`}
-                  type="text"
-                  value={player.name}
-                  onChange={(e) => updatePlayer(index, e.target.value)}
-                  onFocus={() => setFocusedIndex(index)}
-                  onBlur={() => setTimeout(() => setFocusedIndex(null), 200)}
-                  placeholder={
-                    index === 0 ? "Enter first player name or email" : "Enter player name or email"
-                  }
-                  className="h-10 text-base"
-                  autoFocus={index === 0}
-                  aria-label={
-                    index === 0 ? "First player name" : `Player ${index + 1} name`
-                  }
-                  aria-required={index < 4}
-                  aria-invalid={
-                    index < 4 && player.name.trim() === "" ? "true" : "false"
-                  }
-                />
-
-                {/* Autocomplete Dropdown */}
-                {shouldShowAutocomplete(index) && (
-                  <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg">
-                    <button
-                      type="button"
-                      onClick={() => selectCurrentUser(index)}
-                      className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-left"
-                    >
+                {player.userId ? (
+                  /* Locked User Profile Card */
+                  <div className="px-4 py-3 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border-2 border-blue-300 dark:border-blue-700 rounded-lg">
+                    <div className="flex items-center gap-3">
                       <PlayerAvatar
-                        name={currentUser?.user_metadata?.full_name || currentUser?.email || "Me"}
-                        avatarUrl={currentUser?.user_metadata?.avatar_url || currentUser?.user_metadata?.picture}
+                        name={player.name}
+                        avatarUrl={player.avatarUrl}
                         size="md"
                       />
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-gray-900 dark:text-white truncate">
-                          {currentUser?.user_metadata?.full_name || "You"}
+                        <p className="font-semibold text-gray-900 dark:text-white truncate">
+                          {player.name}
                         </p>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
-                          {currentUser?.email}
-                        </p>
+                        {player.email && (
+                          <p className="text-xs text-gray-600 dark:text-gray-400 truncate">
+                            {player.email}
+                          </p>
+                        )}
                       </div>
-                      <User className="h-4 w-4 text-blue-600" />
-                    </button>
+                      <User className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                    </div>
                   </div>
-                )}
+                ) : (
+                  /* Editable Input Field */
+                  <>
+                    <Label
+                      htmlFor={`player-${index}`}
+                      className="sr-only"
+                    >
+                      {index === 0 ? "First player name" : `Player ${index + 1} name`}
+                    </Label>
+                    <Input
+                      id={`player-${index}`}
+                      type="text"
+                      value={player.name}
+                      onChange={(e) => updatePlayer(index, e.target.value)}
+                      onFocus={() => setFocusedIndex(index)}
+                      onBlur={() => setTimeout(() => setFocusedIndex(null), 200)}
+                      placeholder={
+                        index === 0 ? "Enter first player name or email" : "Enter player name or email"
+                      }
+                      className="h-10 text-base"
+                      autoFocus={index === 0}
+                      aria-label={
+                        index === 0 ? "First player name" : `Player ${index + 1} name`
+                      }
+                      aria-required={index < 4}
+                      aria-invalid={
+                        index < 4 && player.name.trim() === "" ? "true" : "false"
+                      }
+                    />
 
-                {/* Show email if player has one */}
-                {player.email && (
-                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                    {player.email}
-                  </p>
+                    {/* Autocomplete Dropdown */}
+                    {shouldShowAutocomplete(index) && (
+                      <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg">
+                        <button
+                          type="button"
+                          onClick={() => selectCurrentUser(index)}
+                          className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-left"
+                        >
+                          <PlayerAvatar
+                            name={currentUser?.user_metadata?.full_name || currentUser?.email || "Me"}
+                            avatarUrl={currentUser?.user_metadata?.avatar_url || currentUser?.user_metadata?.picture}
+                            size="md"
+                          />
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-gray-900 dark:text-white truncate">
+                              {currentUser?.user_metadata?.full_name || "You"}
+                            </p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
+                              {currentUser?.email}
+                            </p>
+                          </div>
+                          <User className="h-4 w-4 text-blue-600" />
+                        </button>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
 
