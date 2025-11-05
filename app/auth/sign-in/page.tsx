@@ -12,13 +12,18 @@ export default async function SignInPage() {
     return redirect("/");
   }
 
+  const getSiteUrl =
+    `https://${process.env.VERCEL_URL}` ||
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    "http://localhost:3000";
+
   async function signInWithGoogle() {
     "use server";
     const supabase = await createClient();
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+        redirectTo: `${getSiteUrl}/auth/callback`,
       },
     });
 
