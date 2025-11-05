@@ -110,20 +110,6 @@ export default function TournamentResultsPage() {
       .slice(0, 2);
   };
 
-  const getPodiumHeight = (position: number) => {
-    if (position === 0) return "h-48"; // 1st place (tallest)
-    if (position === 1) return "h-36"; // 2nd place
-    if (position === 2) return "h-28"; // 3rd place
-    return "h-24";
-  };
-
-  const getPodiumColor = (position: number) => {
-    if (position === 0) return "from-yellow-400 to-yellow-600"; // Gold
-    if (position === 1) return "from-gray-300 to-gray-500"; // Silver
-    if (position === 2) return "from-orange-400 to-orange-600"; // Bronze
-    return "from-gray-200 to-gray-400";
-  };
-
   const getMedalEmoji = (position: number) => {
     if (position === 0) return "🥇";
     if (position === 1) return "🥈";
@@ -161,25 +147,26 @@ export default function TournamentResultsPage() {
   const remaining = players.slice(3);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-orange-500 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-gopadel-lightest via-gopadel-light/30 to-gopadel-cyan/20 dark:from-gray-900 dark:via-gopadel-dark/20 dark:to-gopadel-medium/10 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full mb-6">
+          <div className="inline-flex items-center gap-2 mb-6">
             <Link
-              href={`/tournament/${tournamentId}`}
-              className="text-white/90 hover:text-white transition-colors text-sm font-medium"
+              href={`/tournament/${tournamentId}?view=matches`}
+              className="text-gray-600 dark:text-gray-400 hover:text-gopadel-medium dark:hover:text-gopadel-cyan transition-colors text-sm font-medium"
             >
-              ← Back to Tournament
+              ← View Match History
             </Link>
           </div>
-          <h1 className="text-5xl sm:text-6xl font-black text-white mb-4 drop-shadow-lg">
-            🏆 Tournament Complete!
+          <div className="text-6xl mb-4">🏆</div>
+          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-2">
+            Tournament Complete
           </h1>
-          <h2 className="text-3xl sm:text-4xl font-bold text-white/90 mb-2">
+          <h2 className="text-2xl sm:text-3xl font-semibold text-gopadel-medium dark:text-gopadel-cyan mb-2">
             {tournament.name}
           </h2>
-          <p className="text-white/80 text-lg">
+          <p className="text-gray-600 dark:text-gray-400">
             Final Results • {players.length} Players
           </p>
         </div>
@@ -187,12 +174,12 @@ export default function TournamentResultsPage() {
         {/* Podium - Top 3 */}
         {topThree.length > 0 && (
           <div className="mb-16">
-            <div className="flex items-end justify-center gap-4 mb-8">
+            <div className="flex items-end justify-center gap-6 mb-8">
               {/* 2nd Place */}
               {topThree[1] && (
                 <div className="flex flex-col items-center flex-1 max-w-xs">
                   <div className="mb-4 relative">
-                    <div className="w-24 h-24 rounded-full bg-white shadow-2xl flex items-center justify-center text-4xl font-bold text-gray-700 border-4 border-gray-400">
+                    <div className="w-24 h-24 rounded-full bg-gradient-to-br from-gray-100 to-gray-300 dark:from-gray-700 dark:to-gray-600 shadow-lg flex items-center justify-center text-3xl font-bold text-gray-700 dark:text-gray-200 border-4 border-gray-300 dark:border-gray-500">
                       {topThree[1].profileImage ? (
                         <img
                           src={topThree[1].profileImage}
@@ -207,21 +194,15 @@ export default function TournamentResultsPage() {
                       {getMedalEmoji(1)}
                     </div>
                   </div>
-                  <h3 className="text-xl font-bold text-white text-center mb-1 drop-shadow">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white text-center mb-1">
                     {topThree[1].player_name}
                   </h3>
-                  <p className="text-3xl font-black text-white drop-shadow-lg">
+                  <p className="text-3xl font-bold text-gray-700 dark:text-gray-300">
                     {topThree[1].total_points}
                   </p>
-                  <p className="text-white/80 text-sm mb-4">points</p>
-                  <div
-                    className={`w-full ${getPodiumHeight(
-                      1
-                    )} bg-gradient-to-b ${getPodiumColor(
-                      1
-                    )} rounded-t-2xl shadow-2xl flex items-center justify-center`}
-                  >
-                    <span className="text-6xl font-black text-white/30">2</span>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">points</p>
+                  <div className="w-full h-36 bg-gray-200 dark:bg-gray-700 rounded-t-2xl shadow-lg flex items-center justify-center border-2 border-gray-300 dark:border-gray-600">
+                    <span className="text-6xl font-bold text-gray-300 dark:text-gray-600">2</span>
                   </div>
                 </div>
               )}
@@ -230,7 +211,7 @@ export default function TournamentResultsPage() {
               {topThree[0] && (
                 <div className="flex flex-col items-center flex-1 max-w-xs">
                   <div className="mb-4 relative">
-                    <div className="w-32 h-32 rounded-full bg-white shadow-2xl flex items-center justify-center text-5xl font-bold text-yellow-600 border-4 border-yellow-400">
+                    <div className="w-32 h-32 rounded-full bg-gradient-to-br from-yellow-100 to-yellow-300 dark:from-yellow-600 dark:to-yellow-500 shadow-lg flex items-center justify-center text-4xl font-bold text-yellow-700 dark:text-yellow-100 border-4 border-yellow-400 dark:border-yellow-500">
                       {topThree[0].profileImage ? (
                         <img
                           src={topThree[0].profileImage}
@@ -241,25 +222,19 @@ export default function TournamentResultsPage() {
                         getInitials(topThree[0].player_name)
                       )}
                     </div>
-                    <div className="absolute -top-3 -right-3 text-5xl animate-pulse">
+                    <div className="absolute -top-3 -right-3 text-5xl">
                       {getMedalEmoji(0)}
                     </div>
                   </div>
-                  <h3 className="text-2xl font-bold text-white text-center mb-1 drop-shadow">
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white text-center mb-1">
                     {topThree[0].player_name}
                   </h3>
-                  <p className="text-4xl font-black text-white drop-shadow-lg">
+                  <p className="text-4xl font-bold text-gopadel-medium dark:text-gopadel-cyan">
                     {topThree[0].total_points}
                   </p>
-                  <p className="text-white/80 text-sm mb-4">points</p>
-                  <div
-                    className={`w-full ${getPodiumHeight(
-                      0
-                    )} bg-gradient-to-b ${getPodiumColor(
-                      0
-                    )} rounded-t-2xl shadow-2xl flex items-center justify-center`}
-                  >
-                    <span className="text-8xl font-black text-white/30">1</span>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">points</p>
+                  <div className="w-full h-48 bg-yellow-200 dark:bg-yellow-700 rounded-t-2xl shadow-lg flex items-center justify-center border-2 border-yellow-300 dark:border-yellow-600">
+                    <span className="text-8xl font-bold text-yellow-300 dark:text-yellow-600">1</span>
                   </div>
                 </div>
               )}
@@ -268,7 +243,7 @@ export default function TournamentResultsPage() {
               {topThree[2] && (
                 <div className="flex flex-col items-center flex-1 max-w-xs">
                   <div className="mb-4 relative">
-                    <div className="w-20 h-20 rounded-full bg-white shadow-2xl flex items-center justify-center text-3xl font-bold text-orange-600 border-4 border-orange-400">
+                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-orange-100 to-orange-300 dark:from-orange-700 dark:to-orange-600 shadow-lg flex items-center justify-center text-2xl font-bold text-orange-700 dark:text-orange-200 border-4 border-orange-300 dark:border-orange-500">
                       {topThree[2].profileImage ? (
                         <img
                           src={topThree[2].profileImage}
@@ -283,21 +258,15 @@ export default function TournamentResultsPage() {
                       {getMedalEmoji(2)}
                     </div>
                   </div>
-                  <h3 className="text-lg font-bold text-white text-center mb-1 drop-shadow">
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white text-center mb-1">
                     {topThree[2].player_name}
                   </h3>
-                  <p className="text-2xl font-black text-white drop-shadow-lg">
+                  <p className="text-2xl font-bold text-gray-700 dark:text-gray-300">
                     {topThree[2].total_points}
                   </p>
-                  <p className="text-white/80 text-sm mb-4">points</p>
-                  <div
-                    className={`w-full ${getPodiumHeight(
-                      2
-                    )} bg-gradient-to-b ${getPodiumColor(
-                      2
-                    )} rounded-t-2xl shadow-2xl flex items-center justify-center`}
-                  >
-                    <span className="text-5xl font-black text-white/30">3</span>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">points</p>
+                  <div className="w-full h-28 bg-orange-200 dark:bg-orange-700 rounded-t-2xl shadow-lg flex items-center justify-center border-2 border-orange-300 dark:border-orange-600">
+                    <span className="text-5xl font-bold text-orange-300 dark:text-orange-600">3</span>
                   </div>
                 </div>
               )}
@@ -308,21 +277,21 @@ export default function TournamentResultsPage() {
         {/* Remaining Players */}
         {remaining.length > 0 && (
           <div className="max-w-3xl mx-auto mb-12">
-            <h3 className="text-2xl font-bold text-white text-center mb-6">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white text-center mb-6">
               Other Participants
             </h3>
             <div className="space-y-3">
               {remaining.map((player, index) => (
                 <div
                   key={player.id}
-                  className="bg-white/95 backdrop-blur-sm rounded-2xl p-5 shadow-lg hover:shadow-xl transition-all hover:scale-105"
+                  className="bg-white dark:bg-gray-800 rounded-xl p-5 border border-gray-200 dark:border-gray-700 hover:border-gopadel-medium dark:hover:border-gopadel-cyan transition-all"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4 flex-1">
-                      <div className="text-3xl font-black text-gray-400 w-12 text-center">
+                      <div className="text-2xl font-bold text-gray-400 dark:text-gray-500 w-10 text-center">
                         {index + 4}
                       </div>
-                      <div className="w-14 h-14 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white text-xl font-bold shadow-md">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gopadel-medium to-gopadel-cyan flex items-center justify-center text-white text-lg font-bold">
                         {player.profileImage ? (
                           <img
                             src={player.profileImage}
@@ -334,20 +303,20 @@ export default function TournamentResultsPage() {
                         )}
                       </div>
                       <div className="flex-1">
-                        <p className="font-bold text-gray-900 text-lg">
+                        <p className="font-semibold text-gray-900 dark:text-white text-lg">
                           {player.player_name}
                         </p>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
                           {player.matches_played} matches • {player.matches_won}{" "}
                           wins
                         </p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-3xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                      <p className="text-2xl font-bold text-gopadel-medium dark:text-gopadel-cyan">
                         {player.total_points}
                       </p>
-                      <p className="text-sm text-gray-600">points</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">points</p>
                     </div>
                   </div>
                 </div>
@@ -357,14 +326,14 @@ export default function TournamentResultsPage() {
         )}
 
         {/* Share Button */}
-        <div className="max-w-md mx-auto space-y-4">
+        <div className="max-w-md mx-auto space-y-3">
           <Button
             size="lg"
             onClick={handleShare}
-            className="w-full bg-white text-purple-600 hover:bg-white/90 font-bold text-lg py-6 shadow-2xl"
+            className="w-full"
           >
             <svg
-              className="w-6 h-6 mr-2"
+              className="w-5 h-5 mr-2"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -383,7 +352,7 @@ export default function TournamentResultsPage() {
             size="lg"
             variant="outline"
             onClick={handleCopyLink}
-            className="w-full bg-white/20 text-white border-white/30 hover:bg-white/30 font-semibold backdrop-blur-sm"
+            className="w-full"
           >
             <svg
               className="w-5 h-5 mr-2"
@@ -403,7 +372,7 @@ export default function TournamentResultsPage() {
         </div>
 
         {/* Tournament Info Footer */}
-        <div className="text-center mt-12 text-white/80">
+        <div className="text-center mt-12 text-gray-600 dark:text-gray-400">
           <p className="text-sm">
             {tournament.tournament_type.charAt(0).toUpperCase() +
               tournament.tournament_type.slice(1)}{" "}

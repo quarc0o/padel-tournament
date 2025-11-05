@@ -35,8 +35,13 @@ export default function TournamentPage() {
   const [teamBScore, setTeamBScore] = useState<number | "">("");
   const [submitting, setSubmitting] = useState(false);
   const [showMatchHistory, setShowMatchHistory] = useState(false);
+  const [viewMatches, setViewMatches] = useState(false);
 
   useEffect(() => {
+    // Check if we should show matches view
+    const urlParams = new URLSearchParams(window.location.search);
+    setViewMatches(urlParams.get("view") === "matches");
+
     fetchTournamentData();
   }, [tournamentId]);
 
@@ -86,8 +91,15 @@ export default function TournamentPage() {
 
       if (matchError) {
         if (matchError.code === "PGRST116") {
-          // No match found - tournament might be complete
-          console.log("No current match found");
+          // No match found - tournament is complete
+          console.log("No current match found - tournament complete");
+
+          // If not viewing matches explicitly, redirect to results
+          const urlParams = new URLSearchParams(window.location.search);
+          if (urlParams.get("view") !== "matches") {
+            router.push(`/tournament/${tournamentId}/results`);
+            return;
+          }
         } else {
           throw matchError;
         }
@@ -447,28 +459,27 @@ export default function TournamentPage() {
               </div>
             )}
           </div>
-        ) : (
+        ) : viewMatches ? (
           <div className="text-center py-12">
-            <div className="bg-gradient-to-r from-purple-600 via-pink-500 to-orange-500 rounded-3xl p-12 shadow-2xl max-w-2xl mx-auto">
-              <div className="text-7xl mb-6 animate-bounce">🏆</div>
-              <p className="text-4xl font-black text-white mb-4">
-                Tournament Complete!
+            <div className="bg-white dark:bg-gray-800 rounded-2xl border-2 border-gopadel-light dark:border-gopadel-medium p-12 shadow-lg max-w-2xl mx-auto">
+              <div className="text-6xl mb-4">🏆</div>
+              <p className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                Tournament Complete
               </p>
-              <p className="text-white/90 text-lg mb-8">
-                All rounds have been played. Check out the final results!
+              <p className="text-gray-600 dark:text-gray-400 mb-8">
+                All rounds have been played. View the final results below or check match history.
               </p>
               <Button
                 size="lg"
                 asChild
-                className="bg-white text-purple-600 hover:bg-white/90 font-bold text-lg px-8 py-6 shadow-xl"
               >
                 <Link href={`/tournament/${tournamentId}/results`}>
-                  View Final Results & Share 🎉
+                  View Final Results
                 </Link>
               </Button>
             </div>
           </div>
-        )}
+        ) : null}
 
         {/* Match History Toggle Button */}
         <div className="max-w-3xl mx-auto mb-6">
