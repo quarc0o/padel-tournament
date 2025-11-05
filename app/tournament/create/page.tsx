@@ -4,6 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import StepIndicator from "@/components/ui/StepIndicator";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { X } from "lucide-react";
 import Link from "next/link";
 import { createTournament } from "@/lib/tournament";
 import { createClient } from "@/utils/supabase/client";
@@ -363,47 +366,63 @@ function PlayersStep({
 
       {/* Player Name Inputs */}
       <div className="max-w-2xl mx-auto">
-        <div className="space-y-3">
+        <div className="space-y-4">
           {players.map((player, index) => (
-            <div key={index} className="flex items-center gap-3 group">
-              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white flex items-center justify-center font-semibold">
+            <div key={index} className="flex items-start gap-3">
+              {/* Player Number Badge */}
+              <div
+                className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white flex items-center justify-center font-semibold mt-0.5"
+                aria-hidden="true"
+              >
                 {index + 1}
               </div>
-              <input
-                type="text"
-                value={player}
-                onChange={(e) => updatePlayer(index, e.target.value)}
-                placeholder={
-                  index === 0 ? "Enter first player name" : "Enter player name"
-                }
-                className="flex-1 px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                autoFocus={index === 0}
-              />
-              {player.trim() !== "" && (
-                <button
-                  onClick={() => removePlayer(index)}
-                  className="flex-shrink-0 w-10 h-10 rounded-lg bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-900/40 transition-colors opacity-0 group-hover:opacity-100"
-                  title="Remove player"
+
+              {/* Input Field with Label */}
+              <div className="flex-1 space-y-2">
+                <Label
+                  htmlFor={`player-${index}`}
+                  className="sr-only"
                 >
-                  <svg
-                    className="w-5 h-5 mx-auto"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
+                  {index === 0 ? "First player name" : `Player ${index + 1} name`}
+                </Label>
+                <Input
+                  id={`player-${index}`}
+                  type="text"
+                  value={player}
+                  onChange={(e) => updatePlayer(index, e.target.value)}
+                  placeholder={
+                    index === 0 ? "Enter first player name" : "Enter player name"
+                  }
+                  className="h-10 text-base"
+                  autoFocus={index === 0}
+                  aria-label={
+                    index === 0 ? "First player name" : `Player ${index + 1} name`
+                  }
+                  aria-required={index < 4}
+                  aria-invalid={
+                    index < 4 && player.trim() === "" ? "true" : "false"
+                  }
+                />
+              </div>
+
+              {/* Remove Button */}
+              {player.trim() !== "" && (
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="icon"
+                  onClick={() => removePlayer(index)}
+                  className="flex-shrink-0 mt-0.5"
+                  aria-label={`Remove ${player || `player ${index + 1}`}`}
+                  title={`Remove ${player || `player ${index + 1}`}`}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
               )}
               {player.trim() === "" &&
                 players.length > 1 &&
                 index !== players.length - 1 && (
-                  <div className="w-10" /> // Spacer for alignment
+                  <div className="w-10" aria-hidden="true" />
                 )}
             </div>
           ))}
