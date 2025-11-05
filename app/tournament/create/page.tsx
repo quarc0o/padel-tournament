@@ -381,8 +381,10 @@ function PlayersStep({
     const query = players[index]?.name?.toLowerCase() || "";
     if (query.length === 0) return false;
 
-    // Check if this user is already added in ANY cell (including current one)
-    const isUserAlreadyAdded = players.some((player) => player.userId === currentUser.id);
+    // Check if this user is already added in OTHER cells (not the current one)
+    const isUserAlreadyAdded = players.some(
+      (player, i) => i !== index && player.userId === currentUser.id
+    );
     if (isUserAlreadyAdded) return false;
 
     // Search by name or email
