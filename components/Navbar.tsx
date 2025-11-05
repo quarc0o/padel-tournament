@@ -2,6 +2,7 @@ import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
 import Image from "next/image";
 import UserButton from "./UserButton";
+import MobileMenu from "./MobileMenu";
 import { User } from "@supabase/supabase-js";
 import { Button } from "./ui/button";
 
@@ -52,22 +53,8 @@ export default async function Navbar() {
               </Button>
             )}
 
-            {/* Mobile Menu Button */}
-            <Button variant="ghost" size="icon" className="md:hidden">
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            </Button>
+            {/* Mobile Menu */}
+            <MobileMenu user={user} initials={initials || undefined} />
           </div>
         </div>
       </div>
