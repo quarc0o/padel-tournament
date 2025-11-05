@@ -35,8 +35,14 @@ export default function TournamentPage() {
   const [teamBScore, setTeamBScore] = useState<number | "">("");
   const [submitting, setSubmitting] = useState(false);
   const [showMatchHistory, setShowMatchHistory] = useState(false);
+  const [viewMatches, setViewMatches] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   useEffect(() => {
+    // Check if we should show matches view
+    const urlParams = new URLSearchParams(window.location.search);
+    setViewMatches(urlParams.get("view") === "matches");
+
     fetchTournamentData();
   }, [tournamentId]);
 
@@ -53,6 +59,18 @@ export default function TournamentPage() {
 
       if (tournamentError) throw tournamentError;
       setTournament(tournamentData);
+
+      // Check if tournament is completed and redirect to results
+      const urlParams = new URLSearchParams(window.location.search);
+      if (
+        tournamentData.status === "completed" &&
+        urlParams.get("view") !== "matches"
+      ) {
+        console.log("Tournament is completed - redirecting to results");
+        setIsRedirecting(true);
+        router.replace(`/tournament/${tournamentId}/results`);
+        return;
+      }
 
       // Fetch all players
       const { data: playersData, error: playersError } = await supabase
@@ -86,8 +104,16 @@ export default function TournamentPage() {
 
       if (matchError) {
         if (matchError.code === "PGRST116") {
-          // No match found - tournament might be complete
-          console.log("No current match found");
+          // No match found - tournament is complete
+          console.log("No current match found - tournament complete");
+
+          // If not viewing matches explicitly, redirect to results
+          const urlParams = new URLSearchParams(window.location.search);
+          if (urlParams.get("view") !== "matches") {
+            setIsRedirecting(true);
+            router.replace(`/tournament/${tournamentId}/results`);
+            return;
+          }
         } else {
           throw matchError;
         }
@@ -204,14 +230,15 @@ export default function TournamentPage() {
 
       if (result.tournamentComplete) {
         console.log("🏆 Tournament Complete!");
-        alert("Score saved! Tournament is complete! 🎉");
+        setIsRedirecting(true);
+        // Redirect to results page
+        router.replace(`/tournament/${tournamentId}/results`);
       } else {
         console.log("✅ Next match generated for Round", result.nextRound);
         alert(`Score saved! Moving to Round ${result.nextRound}...`);
+        // Reload the page to show the new match
+        window.location.reload();
       }
-
-      // Reload the page to show the new match or final standings
-      window.location.reload();
     } catch (error) {
       console.error("Error saving score:", error);
       alert("Failed to save score");
@@ -220,13 +247,15 @@ export default function TournamentPage() {
     }
   };
 
-  if (loading) {
+  if (loading || isRedirecting) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="text-4xl mb-4">🎾</div>
+          <div className="text-4xl mb-4">
+            {isRedirecting ? "🏆" : "🎾"}
+          </div>
           <p className="text-gray-600 dark:text-gray-400">
-            Loading tournament...
+            {isRedirecting ? "Redirecting to results..." : "Loading tournament..."}
           </p>
         </div>
       </div>
@@ -446,16 +475,27 @@ export default function TournamentPage() {
               </div>
             )}
           </div>
-        ) : (
+        ) : viewMatches ? (
           <div className="text-center py-12">
-            <p className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-              Tournament Complete! 🎉
-            </p>
-            <p className="text-gray-600 dark:text-gray-400">
-              All rounds have been played
-            </p>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl border-2 border-gopadel-light dark:border-gopadel-medium p-12 shadow-lg max-w-2xl mx-auto">
+              <div className="text-6xl mb-4">🏆</div>
+              <p className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                Tournament Complete
+              </p>
+              <p className="text-gray-600 dark:text-gray-400 mb-8">
+                All rounds have been played. View the final results below or check match history.
+              </p>
+              <Button
+                size="lg"
+                asChild
+              >
+                <Link href={`/tournament/${tournamentId}/results`}>
+                  View Final Results
+                </Link>
+              </Button>
+            </div>
           </div>
-        )}
+        ) : null}
 
         {/* Match History Toggle Button */}
         <div className="max-w-3xl mx-auto mb-6">
