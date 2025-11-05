@@ -1,15 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import StepIndicator from "@/components/ui/StepIndicator";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { X } from "lucide-react";
+import { X, User } from "lucide-react";
 import Link from "next/link";
-import { createTournament } from "@/lib/tournament";
+import { createTournament, PlayerInput } from "@/lib/tournament";
 import { createClient } from "@/utils/supabase/client";
+import { PlayerAvatar } from "@/components/PlayerAvatar";
+import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 // Step 1: Tournament Type Selection
 function TournamentTypeStep({
@@ -290,23 +292,42 @@ function PlayersStep({
   players,
   onPlayersChange,
 }: {
-  players: string[];
-  onPlayersChange: (players: string[]) => void;
+  players: PlayerInput[];
+  onPlayersChange: (players: PlayerInput[]) => void;
 }) {
+  const [currentUser, setCurrentUser] = useState<SupabaseUser | null>(null);
+  const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string[]>([]);
+
+  useEffect(() => {
+    // Fetch current user
+    const fetchUser = async () => {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      setCurrentUser(user);
+    };
+    fetchUser();
+  }, []);
+
   const updatePlayer = (index: number, name: string) => {
     const newPlayers = [...players];
-    newPlayers[index] = name;
+    newPlayers[index] = { ...newPlayers[index], name };
+
+    // Update search query
+    const newSearchQuery = [...searchQuery];
+    newSearchQuery[index] = name;
+    setSearchQuery(newSearchQuery);
 
     // If typing in the last input and it's not empty, add a new empty slot
     if (index === players.length - 1 && name.trim() !== "") {
-      newPlayers.push("");
+      newPlayers.push({ name: "" });
     }
 
     // Remove empty slots from the end (but keep at least one empty slot)
     while (
       newPlayers.length > 1 &&
-      newPlayers[newPlayers.length - 1] === "" &&
-      newPlayers[newPlayers.length - 2] === ""
+      newPlayers[newPlayers.length - 1].name === "" &&
+      newPlayers[newPlayers.length - 2].name === ""
     ) {
       newPlayers.pop();
     }
@@ -314,16 +335,48 @@ function PlayersStep({
     onPlayersChange(newPlayers);
   };
 
+  const selectCurrentUser = (index: number) => {
+    if (!currentUser) return;
+
+    const newPlayers = [...players];
+    newPlayers[index] = {
+      name: currentUser.user_metadata?.full_name || currentUser.email || "Me",
+      email: currentUser.email,
+      userId: currentUser.id,
+      avatarUrl: currentUser.user_metadata?.avatar_url || currentUser.user_metadata?.picture,
+    };
+
+    setFocusedIndex(null);
+    setSearchQuery([]);
+    onPlayersChange(newPlayers);
+  };
+
   const removePlayer = (index: number) => {
     const newPlayers = players.filter((_, i) => i !== index);
     // Ensure there's always at least one empty input
-    if (newPlayers.length === 0 || newPlayers[newPlayers.length - 1] !== "") {
-      newPlayers.push("");
+    if (newPlayers.length === 0 || newPlayers[newPlayers.length - 1].name !== "") {
+      newPlayers.push({ name: "" });
     }
     onPlayersChange(newPlayers);
   };
 
-  const filledPlayers = players.filter((p) => p.trim() !== "");
+  const shouldShowAutocomplete = (index: number): boolean => {
+    if (!currentUser || focusedIndex !== index) return false;
+
+    const query = players[index]?.name?.toLowerCase() || "";
+    if (query.length === 0) return false;
+
+    // Check if already selected this user
+    if (players[index]?.userId === currentUser.id) return false;
+
+    // Search by name or email
+    const userName = currentUser.user_metadata?.full_name?.toLowerCase() || "";
+    const userEmail = currentUser.email?.toLowerCase() || "";
+
+    return userName.includes(query) || userEmail.includes(query);
+  };
+
+  const filledPlayers = players.filter((p) => p.name.trim() !== "");
 
   return (
     <div className="space-y-6">
@@ -369,16 +422,25 @@ function PlayersStep({
         <div className="space-y-4">
           {players.map((player, index) => (
             <div key={index} className="flex items-start gap-3">
-              {/* Player Number Badge */}
-              <div
-                className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white flex items-center justify-center font-semibold mt-0.5"
-                aria-hidden="true"
-              >
-                {index + 1}
-              </div>
+              {/* Player Avatar or Number Badge */}
+              {player.avatarUrl ? (
+                <PlayerAvatar
+                  name={player.name}
+                  avatarUrl={player.avatarUrl}
+                  size="lg"
+                  className="mt-0.5"
+                />
+              ) : (
+                <div
+                  className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white flex items-center justify-center font-semibold mt-0.5"
+                  aria-hidden="true"
+                >
+                  {index + 1}
+                </div>
+              )}
 
-              {/* Input Field with Label */}
-              <div className="flex-1 space-y-2">
+              {/* Input Field with Label and Autocomplete */}
+              <div className="flex-1 space-y-2 relative">
                 <Label
                   htmlFor={`player-${index}`}
                   className="sr-only"
@@ -388,10 +450,12 @@ function PlayersStep({
                 <Input
                   id={`player-${index}`}
                   type="text"
-                  value={player}
+                  value={player.name}
                   onChange={(e) => updatePlayer(index, e.target.value)}
+                  onFocus={() => setFocusedIndex(index)}
+                  onBlur={() => setTimeout(() => setFocusedIndex(null), 200)}
                   placeholder={
-                    index === 0 ? "Enter first player name" : "Enter player name"
+                    index === 0 ? "Enter first player name or email" : "Enter player name or email"
                   }
                   className="h-10 text-base"
                   autoFocus={index === 0}
@@ -400,26 +464,59 @@ function PlayersStep({
                   }
                   aria-required={index < 4}
                   aria-invalid={
-                    index < 4 && player.trim() === "" ? "true" : "false"
+                    index < 4 && player.name.trim() === "" ? "true" : "false"
                   }
                 />
+
+                {/* Autocomplete Dropdown */}
+                {shouldShowAutocomplete(index) && (
+                  <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg">
+                    <button
+                      type="button"
+                      onClick={() => selectCurrentUser(index)}
+                      className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-left"
+                    >
+                      <PlayerAvatar
+                        name={currentUser?.user_metadata?.full_name || currentUser?.email || "Me"}
+                        avatarUrl={currentUser?.user_metadata?.avatar_url || currentUser?.user_metadata?.picture}
+                        size="md"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-gray-900 dark:text-white truncate">
+                          {currentUser?.user_metadata?.full_name || "You"}
+                        </p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
+                          {currentUser?.email}
+                        </p>
+                      </div>
+                      <User className="h-4 w-4 text-blue-600" />
+                    </button>
+                  </div>
+                )}
+
+                {/* Show email if player has one */}
+                {player.email && (
+                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                    {player.email}
+                  </p>
+                )}
               </div>
 
               {/* Remove Button */}
-              {player.trim() !== "" && (
+              {player.name.trim() !== "" && (
                 <Button
                   type="button"
                   variant="destructive"
                   size="icon"
                   onClick={() => removePlayer(index)}
                   className="flex-shrink-0 mt-0.5"
-                  aria-label={`Remove ${player || `player ${index + 1}`}`}
-                  title={`Remove ${player || `player ${index + 1}`}`}
+                  aria-label={`Remove ${player.name || `player ${index + 1}`}`}
+                  title={`Remove ${player.name || `player ${index + 1}`}`}
                 >
                   <X className="h-4 w-4" />
                 </Button>
               )}
-              {player.trim() === "" &&
+              {player.name.trim() === "" &&
                 players.length > 1 &&
                 index !== players.length - 1 && (
                   <div className="w-10" aria-hidden="true" />
@@ -462,9 +559,9 @@ function SummaryStep({
 }: {
   tournamentType: string;
   targetPoints: number;
-  players: string[];
+  players: PlayerInput[];
 }) {
-  const filledPlayers = players.filter((p) => p.trim() !== "");
+  const filledPlayers = players.filter((p) => p.name.trim() !== "");
 
   return (
     <div className="space-y-6">
@@ -518,12 +615,21 @@ function SummaryStep({
                 key={index}
                 className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
               >
-                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-semibold">
-                  {index + 1}
+                <PlayerAvatar
+                  name={player.name}
+                  avatarUrl={player.avatarUrl}
+                  size="md"
+                />
+                <div className="flex-1 min-w-0">
+                  <p className="text-gray-900 dark:text-white font-medium truncate">
+                    {player.name}
+                  </p>
+                  {player.email && (
+                    <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                      {player.email}
+                    </p>
+                  )}
                 </div>
-                <span className="text-gray-900 dark:text-white font-medium">
-                  {player}
-                </span>
               </div>
             ))}
           </div>
@@ -539,7 +645,7 @@ export default function CreateTournamentPage() {
   const [currentStep, setCurrentStep] = useState(1);
   const [tournamentType, setTournamentType] = useState("");
   const [targetPoints, setTargetPoints] = useState(0);
-  const [players, setPlayers] = useState<string[]>([""]);
+  const [players, setPlayers] = useState<PlayerInput[]>([{ name: "" }]);
 
   const steps = [
     { id: 1, name: "Format", description: "Tournament type" },
@@ -555,7 +661,7 @@ export default function CreateTournamentPage() {
       case 2:
         return targetPoints > 0;
       case 3:
-        return players.filter((p) => p.trim() !== "").length >= 4;
+        return players.filter((p) => p.name.trim() !== "").length >= 4;
       case 4:
         return true;
       default:
@@ -576,7 +682,7 @@ export default function CreateTournamentPage() {
   };
 
   const handleCreateTournament = async () => {
-    const filledPlayers = players.filter((p) => p.trim() !== "");
+    const filledPlayers = players.filter((p) => p.name.trim() !== "");
 
     // Get current user
     const supabase = createClient();
@@ -603,6 +709,7 @@ export default function CreateTournamentPage() {
     console.log("  Type:", tournamentType.toUpperCase());
     console.log("  Target Points:", targetPoints);
     console.log("  Players:", filledPlayers.length);
+    console.log("  Players with profiles:", filledPlayers.filter(p => p.userId).length);
     console.log("=".repeat(50));
 
     // Create tournament in database

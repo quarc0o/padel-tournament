@@ -108,6 +108,9 @@ export type Database = {
           player_order: number;
           total_points: number;
           tournament_id: string;
+          user_id: string | null;
+          email: string | null;
+          avatar_url: string | null;
         };
         Insert: {
           created_at?: string;
@@ -118,6 +121,9 @@ export type Database = {
           player_order: number;
           total_points?: number;
           tournament_id: string;
+          user_id?: string | null;
+          email?: string | null;
+          avatar_url?: string | null;
         };
         Update: {
           created_at?: string;
@@ -128,6 +134,9 @@ export type Database = {
           player_order?: number;
           total_points?: number;
           tournament_id?: string;
+          user_id?: string | null;
+          email?: string | null;
+          avatar_url?: string | null;
         };
         Relationships: [
           {
