@@ -2,7 +2,11 @@ import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 
-export default async function SignUpPage() {
+export default async function SignUpPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string; message?: string }>;
+}) {
   const supabase = await createClient();
 
   const {
@@ -13,31 +17,33 @@ export default async function SignUpPage() {
     return redirect("/");
   }
 
+  const params = await searchParams;
+  const error = params.error;
+  const message = params.message;
+
   async function signUpWithEmail(formData: FormData) {
     "use server";
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
     const fullName = formData.get("fullName") as string;
 
-    // TODO: Implement email/password sign-up with Supabase
-    // const supabase = await createClient();
-    // const { data, error } = await supabase.auth.signUp({
-    //   email,
-    //   password,
-    //   options: {
-    //     data: {
-    //       full_name: fullName,
-    //     },
-    //   },
-    // });
-    //
-    // if (error) {
-    //   return redirect("/auth/sign-up?error=Could not create account");
-    // }
-    //
-    // return redirect("/auth/sign-in?message=Check your email to confirm your account");
+    const supabase = await createClient();
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: fullName,
+        },
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+      },
+    });
 
-    console.log("Sign up with email:", email, fullName);
+    if (error) {
+      return redirect(`/auth/sign-up?error=${encodeURIComponent(error.message)}`);
+    }
+
+    return redirect("/auth/sign-in?message=Check your email to confirm your account");
   }
 
   async function signInWithGoogle() {
@@ -72,6 +78,18 @@ export default async function SignUpPage() {
             Create an account to start organizing tournaments
           </p>
         </div>
+
+        {/* Error/Success Messages */}
+        {error && (
+          <div className="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+            <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+          </div>
+        )}
+        {message && (
+          <div className="mb-4 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+            <p className="text-sm text-green-600 dark:text-green-400">{message}</p>
+          </div>
+        )}
 
         {/* Email/Password Form */}
         <form action={signUpWithEmail} className="space-y-4">
