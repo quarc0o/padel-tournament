@@ -2,7 +2,7 @@ import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 
-export default async function SignInPage({
+export default async function SignUpPage({
   searchParams,
 }: {
   searchParams: Promise<{ error?: string; message?: string }>;
@@ -21,24 +21,29 @@ export default async function SignInPage({
   const error = params.error;
   const message = params.message;
 
-  async function signInWithEmail(formData: FormData) {
+  async function signUpWithEmail(formData: FormData) {
     "use server";
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
+    const fullName = formData.get("fullName") as string;
 
     const supabase = await createClient();
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {
+          full_name: fullName,
+        },
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+      },
     });
 
     if (error) {
-      return redirect(
-        `/auth/sign-in?error=${encodeURIComponent(error.message)}`
-      );
+      return redirect(`/auth/sign-up?error=${encodeURIComponent(error.message)}`);
     }
 
-    return redirect("/");
+    return redirect("/auth/sign-in?message=Check your email to confirm your account");
   }
 
   async function signInWithGoogle() {
@@ -67,10 +72,10 @@ export default async function SignInPage({
         <div className="text-center space-y-2 mb-8">
           <div className="text-6xl">🎾</div>
           <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-            Welcome Back
+            Join GoPadel
           </h1>
           <p className="text-gray-600 dark:text-gray-300">
-            Sign in to track your padel tournaments
+            Create an account to start organizing tournaments
           </p>
         </div>
 
@@ -82,14 +87,29 @@ export default async function SignInPage({
         )}
         {message && (
           <div className="mb-4 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-            <p className="text-sm text-green-600 dark:text-green-400">
-              {message}
-            </p>
+            <p className="text-sm text-green-600 dark:text-green-400">{message}</p>
           </div>
         )}
 
         {/* Email/Password Form */}
-        <form action={signInWithEmail} className="space-y-4">
+        <form action={signUpWithEmail} className="space-y-4">
+          <div>
+            <label
+              htmlFor="fullName"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >
+              Full Name
+            </label>
+            <input
+              type="text"
+              id="fullName"
+              name="fullName"
+              required
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none"
+              placeholder="John Doe"
+            />
+          </div>
+
           <div>
             <label
               htmlFor="email"
@@ -119,16 +139,20 @@ export default async function SignInPage({
               id="password"
               name="password"
               required
+              minLength={6}
               className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none"
               placeholder="••••••••"
             />
+            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              Must be at least 6 characters
+            </p>
           </div>
 
           <button
             type="submit"
             className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white px-6 py-3 rounded-lg font-semibold hover:scale-[1.02] active:scale-[0.98] transition-transform shadow-lg hover:shadow-xl"
           >
-            Sign In
+            Create Account
           </button>
         </form>
 
@@ -172,14 +196,14 @@ export default async function SignInPage({
           </button>
         </form>
 
-        {/* Sign Up Link */}
+        {/* Sign In Link */}
         <p className="text-center mt-6 text-sm text-gray-600 dark:text-gray-400">
-          Don&apos;t have an account?{" "}
+          Already have an account?{" "}
           <Link
-            href="/auth/sign-up"
+            href="/auth/sign-in"
             className="font-semibold text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 transition-colors"
           >
-            Sign Up
+            Sign In
           </Link>
         </p>
       </div>
